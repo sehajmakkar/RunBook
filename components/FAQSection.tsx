@@ -1,40 +1,43 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Plus } from "lucide-react"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus } from "lucide-react";
 type FAQItem = {
-  question: string
-  answer: string
-}
+  question: string;
+  answer: string;
+};
 type FAQSectionProps = {
-  title?: string
-  faqs?: FAQItem[]
-}
+  title?: string;
+  faqs?: FAQItem[];
+};
 const defaultFAQs: FAQItem[] = [
   {
-    question: "What is MorphAI and how does it help engineering teams?",
+    question: "What is RunBook and how does it hold me accountable?",
     answer:
-      "MorphAI is an AI Engineering Manager that automates meetings, extracts tasks from conversations, tracks blockers, and triggers automated workflows. It replaces status meeting overhead with intelligent automation. Simply integrate MorphAI with your Slack, GitHub, or Jira, and it starts running standups, creating tasks, and tracking progress automatically.",
+      "RunBook is an AI Accountability Manager that runs scheduled voice meetings to check in on your goals—just like a workplace stand-up. Instead of a passive todo app, you attend a meeting with an AI manager who knows your goals, remembers past commitments, questions incomplete work, and locks in new promises. The AI has authority: it doesn't wait for you to act, it shows up and expects results.",
   },
   {
-    question: "How does MorphAI extract tasks and track blockers?",
+    question: "How does RunBook work? What happens in a meeting?",
     answer:
-      "MorphAI uses advanced natural language processing to listen to your team's conversations, meetings, and async updates. It automatically extracts actionable tasks, identifies blockers, prioritizes work, and pushes updates to your project management tools. All data is encrypted end-to-end and processed securely. Your team data stays private and is never shared with third parties.",
+      "At your chosen time, you join a voice call with your AI manager. The meeting follows a structured format: review of previous commitments, progress check on what was completed and what wasn't, interrogation about why tasks were incomplete, pattern recognition of missed deadlines or repeated excuses, and commitment lock-in with clear, time-bound goals for the next meeting. The AI controls the flow and asks follow-up questions until you give specific answers.",
   },
   {
-    question: "How do I get started with MorphAI and what are the pricing options?",
+    question: "Why voice meetings instead of chat? What if I miss a meeting?",
     answer:
-      "Getting started is simple: sign up, connect your dev tools (Slack, GitHub, Jira, Linear), and MorphAI immediately starts running standups and extracting tasks. We offer flexible pricing: Starter ($49/month for small teams), Pro ($199/month for growing teams), and Enterprise (custom pricing with dedicated support). All plans include API access. Contact our team for volume discounts.",
+      "Chat-based accountability is easy to avoid and easy to fake. Voice meetings increase psychological pressure, require real-time thinking, and reduce vague or dishonest answers. They feel closer to real workplace interactions. If you miss a meeting, the AI remembers it. Repeated no-shows trigger escalated follow-up. The system is designed to make progress unavoidable, not convenient.",
   },
-]
-export const FAQSection = ({ title = "Frequently asked questions", faqs = defaultFAQs }: FAQSectionProps) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+];
+export const FAQSection = ({
+  title = "Frequently asked questions",
+  faqs = defaultFAQs,
+}: FAQSectionProps) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
+    setOpenIndex(openIndex === index ? null : index);
+  };
   return (
-    <section className="w-full py-24 px-8 bg-white">
+    <section id="faq" className="w-full py-24 px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-12 gap-16">
           {/* Left Column - Title */}
@@ -55,7 +58,10 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
           <div className="lg:col-span-8">
             <div className="space-y-0">
               {faqs.map((faq, index) => (
-                <div key={index} className="border-b border-[#e5e5e5] last:border-b-0">
+                <div
+                  key={index}
+                  className="border-b border-[#e5e5e5] last:border-b-0"
+                >
                   <button
                     onClick={() => toggleFAQ(index)}
                     className="w-full flex items-center justify-between py-6 text-left group hover:opacity-70 transition-opacity duration-150"
@@ -80,7 +86,10 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
                       }}
                       className="flex-shrink-0"
                     >
-                      <Plus className="w-6 h-6 text-[#202020]" strokeWidth={1.5} />
+                      <Plus
+                        className="w-6 h-6 text-[#202020]"
+                        strokeWidth={1.5}
+                      />
                     </motion.div>
                   </button>
 
@@ -125,5 +134,5 @@ export const FAQSection = ({ title = "Frequently asked questions", faqs = defaul
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

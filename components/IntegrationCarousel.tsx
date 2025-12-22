@@ -117,10 +117,10 @@ const defaultBottomRowApps: IntegrationApp[] = [
 
 // @component: IntegrationCarousel
 export const IntegrationCarousel = ({
-  buttonText = "Explore Integrations",
+  buttonText = "See how it works",
   buttonHref = "#",
-  title = "Integrates with your entire development stack.",
-  subtitle = "Connect MorphAI to GitHub, Jira, Linear, Slack, Notion, and your favorite dev tools to automate engineering workflows.",
+  title = "Focus on what matters.",
+  subtitle = "RunBook doesn't need integrations or complex setups. Just define your goals, choose your meeting time, and show up. The AI manager handles the rest.",
   topRowApps = defaultTopRowApps,
   bottomRowApps = defaultBottomRowApps,
 }: IntegrationCarouselProps) => {

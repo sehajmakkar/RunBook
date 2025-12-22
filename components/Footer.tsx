@@ -69,8 +69,8 @@ const defaultSections: FooterSection[] = [
 ]
 
 export const Footer = ({
-  companyName = "MorphAI",
-  tagline = "The AI Engineering Manager for Modern Teams",
+  companyName = "RunBook",
+  tagline = "The AI Accountability Manager that holds you accountable",
   sections = defaultSections,
   socialLinks = {
     twitter: "https://twitter.com",

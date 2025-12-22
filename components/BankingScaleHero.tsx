@@ -1,51 +1,54 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 type StatItem = {
-  value: string
-  description: string
-  delay: number
-}
+  value: string;
+  description: string;
+  delay: number;
+};
 type DataPoint = {
-  id: number
-  left: number
-  top: number
-  height: number
-  direction: "up" | "down"
-  delay: number
-}
+  id: number;
+  left: number;
+  top: number;
+  height: number;
+  direction: "up" | "down";
+  delay: number;
+};
 const stats: StatItem[] = [
   {
-    value: "8,492",
-    description: "Tasks extracted\nweekly",
+    value: "87%",
+    description: "Goal completion rate\nafter using RunBook",
     delay: 0,
   },
   {
-    value: "98.7%",
-    description: "Blocker detection\naccuracy",
+    value: "3.2x",
+    description: "More goals achieved\ncompared to todo apps",
     delay: 0.2,
   },
   {
-    value: "47+",
-    description: "Dev tools integrated\nseamlessly",
+    value: "12min",
+    description: "Average meeting duration\nper check-in",
     delay: 0.4,
   },
   {
-    value: "500+",
-    description: "Engineering teams\nusing MorphAI",
+    value: "2,500+",
+    description: "Users building better\nhabits daily",
     delay: 0.6,
   },
-]
+];
 const generateDataPoints = (): DataPoint[] => {
-  const points: DataPoint[] = []
-  const baseLeft = 1
-  const spacing = 32
+  const points: DataPoint[] = [];
+  const baseLeft = 1;
+  const spacing = 32;
   for (let i = 0; i < 50; i++) {
-    const direction = i % 2 === 0 ? "down" : "up"
-    const height = Math.floor(Math.random() * 120) + 88
-    const top = direction === "down" ? Math.random() * 150 + 250 : Math.random() * 100 - 80
+    const direction = i % 2 === 0 ? "down" : "up";
+    const height = Math.floor(Math.random() * 120) + 88;
+    const top =
+      direction === "down"
+        ? Math.random() * 150 + 250
+        : Math.random() * 100 - 80;
     points.push({
       id: i,
       left: baseLeft + i * spacing,
@@ -53,32 +56,33 @@ const generateDataPoints = (): DataPoint[] => {
       height,
       direction,
       delay: i * 0.035,
-    })
+    });
   }
-  return points
-}
+  return points;
+};
 
 // @component: BankingScaleHero
 export const BankingScaleHero = () => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [dataPoints] = useState<DataPoint[]>(generateDataPoints())
-  const [typingComplete, setTypingComplete] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
+  const [dataPoints] = useState<DataPoint[]>(generateDataPoints());
+  const [typingComplete, setTypingComplete] = useState(false);
   useEffect(() => {
-    setIsVisible(true)
-    const timer = setTimeout(() => setTypingComplete(true), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    setIsVisible(true);
+    const timer = setTimeout(() => setTypingComplete(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // @return
   return (
-    <div className="w-full overflow-hidden bg-white">
+    <div id="features" className="w-full overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl px-8 py-24 pt-16">
         <div className="grid grid-cols-12 gap-5 gap-y-16">
           <div className="col-span-12 md:col-span-6 relative z-10">
             <div
               className="relative h-6 inline-flex items-center font-mono uppercase text-xs text-[#167E6C] mb-12 px-2"
               style={{
-                fontFamily: "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
+                fontFamily:
+                  "var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace",
               }}
             >
               <div className="flex items-center gap-0.5 overflow-hidden">
@@ -98,7 +102,7 @@ export const BankingScaleHero = () => {
                     color: "#146e96",
                   }}
                 >
-                  Trusted at scale
+                  Built for accountability
                 </motion.span>
                 <motion.span
                   initial={{
@@ -128,7 +132,7 @@ export const BankingScaleHero = () => {
                 fontWeight: "400",
               }}
             >
-              Automating engineering management for the world's best teams{" "}
+              A virtual manager that holds you accountable{" "}
               <span
                 className="opacity-40"
                 style={{
@@ -136,7 +140,8 @@ export const BankingScaleHero = () => {
                   fontSize: "40px",
                 }}
               >
-                across startups, scale-ups, and enterprises.
+                for remote professionals, solo founders, and ambitious
+                individuals.
               </span>
             </h2>
 
@@ -146,13 +151,15 @@ export const BankingScaleHero = () => {
                 fontFamily: "var(--font-figtree), Figtree",
               }}
             >
-              MorphAI runs your standups, extracts tasks from conversations, tracks blockers in real-time, and triggers
-              automated workflows—replacing status meeting overhead with intelligent automation.
+              RunBook schedules voice meetings to check in on your goals,
+              remembers your commitments, questions incomplete work, and
+              identifies patterns—replacing self-discipline with real
+              accountability.
             </p>
 
             <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]">
               <span className="relative z-10 flex items-center gap-1">
-                Learn about MorphAI
+                Learn how RunBook works
                 <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
               </span>
             </button>
@@ -210,7 +217,10 @@ export const BankingScaleHero = () => {
                         }}
                         className="absolute -left-[1px] w-2 h-2 bg-[#167E6C] rounded-full"
                         style={{
-                          top: point.direction === "down" ? "0px" : `${point.height - 8}px`,
+                          top:
+                            point.direction === "down"
+                              ? "0px"
+                              : `${point.height - 8}px`,
                         }}
                       />
                     </motion.div>
@@ -267,5 +277,5 @@ export const BankingScaleHero = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

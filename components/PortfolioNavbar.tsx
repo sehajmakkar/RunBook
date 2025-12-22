@@ -1,58 +1,62 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 const navigationLinks = [
   {
     name: "Features",
     href: "#features",
   },
   {
+    name: "Case Studies",
+    href: "#case-studies",
+  },
+  {
     name: "Pricing",
     href: "#pricing",
   },
   {
-    name: "Solutions",
-    href: "#solutions",
+    name: "FAQ",
+    href: "#faq",
   },
-  {
-    name: "Resources",
-    href: "#resources",
-  },
-] as any[]
+] as any[];
 
 // @component: PortfolioNavbar
 export const PortfolioNavbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
   const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false)
-  }
+    setIsMobileMenuOpen(false);
+  };
   const handleLinkClick = (href: string) => {
-    closeMobileMenu()
-    const element = document.querySelector(href)
+    closeMobileMenu();
+    const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",
-      })
+      });
     }
-  }
+  };
 
   // @return
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm" : "bg-transparent"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-background/95 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -70,7 +74,7 @@ export const PortfolioNavbar = () => {
                   fontWeight: "800",
                 }}
               >
-                MORPH.AI
+                RUNBOOK
               </span>
             </button>
           </div>
@@ -96,7 +100,7 @@ export const PortfolioNavbar = () => {
 
           <div className="hidden md:block">
             <button
-              onClick={() => handleLinkClick("#contact")}
+              onClick={() => handleLinkClick("#pricing")}
               className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
               style={{
                 fontFamily: "Plus Jakarta Sans, sans-serif",
@@ -162,7 +166,7 @@ export const PortfolioNavbar = () => {
               ))}
               <div className="pt-4 border-t border-border">
                 <button
-                  onClick={() => handleLinkClick("#contact")}
+                  onClick={() => handleLinkClick("#pricing")}
                   className="w-full bg-[#156d95] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200"
                   style={{
                     fontFamily: "Plus Jakarta Sans, sans-serif",
@@ -176,5 +180,5 @@ export const PortfolioNavbar = () => {
         )}
       </AnimatePresence>
     </nav>
-  )
-}
+  );
+};

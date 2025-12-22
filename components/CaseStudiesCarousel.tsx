@@ -1,39 +1,47 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 type CaseStudy = {
-  id: string
-  company: string
-  logo: React.ReactNode
-  title: string
-  features: string[]
-  quote: string
-  attribution: string
-  accentColor: string
+  id: string;
+  company: string;
+  logo: React.ReactNode;
+  title: string;
+  features: string[];
+  quote: string;
+  attribution: string;
+  accentColor: string;
   cards: {
-    type: "slack" | "meeting" | "sentiment" | "notion" | "stripe" | "figma"
-    delay: number
-    zIndex: number
-  }[]
-}
+    type: "slack" | "meeting" | "sentiment" | "notion" | "stripe" | "figma";
+    delay: number;
+    zIndex: number;
+  }[];
+};
 const caseStudies: CaseStudy[] = [
   {
     id: "notion",
-    company: "TechCore Labs",
+    company: "Sarah M.",
     logo: (
-      <svg fill="none" height="48" viewBox="0 0 38 48" width="38" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        fill="none"
+        height="48"
+        viewBox="0 0 38 48"
+        width="38"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           d="m14.25 5c0 7.8701-6.37994 14.25-14.25 14.25v9.5h14.25v14.25h9.5c0-7.8701 6.3799-14.25 14.25-14.25v-9.5h-14.25v-14.25z"
           fill="#16b364"
         />
       </svg>
     ),
-    title: "TechCore Labs uses MorphAI to automate engineering standups and track sprint progress in real-time.",
-    features: ["GitHub Integration", "Task Extraction", "PR Review Automation"],
-    quote: "MorphAI eliminated our 30-minute daily standups. Engineers now spend that time coding.",
-    attribution: "Alex Chen, Engineering Manager, TechCore Labs",
+    title:
+      "Sarah uses RunBook to stay accountable for her side project while working a full-time job.",
+    features: ["Daily Standups", "Goal Tracking", "Pattern Recognition"],
+    quote:
+      "RunBook is the only reason my side project is still alive. The voice meetings create real pressure—I can't fake my way through them like I could with a todo app.",
+    attribution: "Sarah M., Remote Software Engineer",
     accentColor: "#16b364",
     cards: [
       {
@@ -50,9 +58,15 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "cloudwatch",
-    company: "ScaleVenture",
+    company: "Marcus W.",
     logo: (
-      <svg fill="none" height="48" viewBox="0 0 192 48" width="192" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        fill="none"
+        height="48"
+        viewBox="0 0 192 48"
+        width="192"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <filter
           id="a"
           colorInterpolationFilters="sRGB"
@@ -63,7 +77,12 @@ const caseStudies: CaseStudy[] = [
           y="-3"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+          <feBlend
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            mode="normal"
+            result="shape"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -73,8 +92,15 @@ const caseStudies: CaseStudy[] = [
           <feOffset dy="-3" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend in2="shape" mode="normal" result="effect1_innerShadow_3046_38742" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
+          />
+          <feBlend
+            in2="shape"
+            mode="normal"
+            result="effect1_innerShadow_3046_38742"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -84,19 +110,38 @@ const caseStudies: CaseStudy[] = [
           <feOffset dy="3" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0" />
-          <feBlend in2="effect1_innerShadow_3046_38742" mode="normal" result="effect2_innerShadow_3046_38742" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"
+          />
+          <feBlend
+            in2="effect1_innerShadow_3046_38742"
+            mode="normal"
+            result="effect2_innerShadow_3046_38742"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
             type="matrix"
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
           />
-          <feMorphology in="SourceAlpha" operator="erode" radius="1" result="effect3_innerShadow_3046_38742" />
+          <feMorphology
+            in="SourceAlpha"
+            operator="erode"
+            radius="1"
+            result="effect3_innerShadow_3046_38742"
+          />
           <feOffset />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0.0627451 0 0 0 0 0.0941176 0 0 0 0 0.156863 0 0 0 0.24 0" />
-          <feBlend in2="effect2_innerShadow_3046_38742" mode="normal" result="effect3_innerShadow_3046_38742" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0.0627451 0 0 0 0 0.0941176 0 0 0 0 0.156863 0 0 0 0.24 0"
+          />
+          <feBlend
+            in2="effect2_innerShadow_3046_38742"
+            mode="normal"
+            result="effect3_innerShadow_3046_38742"
+          />
         </filter>
         <g filter="url(#a)">
           <rect fill="url(#b)" height="48" rx="12" width="48" />
@@ -106,17 +151,41 @@ const caseStudies: CaseStudy[] = [
             d="m23.9995 14.25c5.3848 0 9.7505 4.3658 9.7505 9.7506s-4.3657 9.7505-9.7505 9.7505-9.7506-4.3657-9.7506-9.7505 4.3658-9.7506 9.7506-9.7506z"
             fill="#fff"
           />
-          <path d="m23.9995 18.0005c-3.3137 0-6 2.6863-6 6s2.6863 6 6 6 6-2.6863 6-6-2.6863-6-6-6z" fill="url(#d)" />
+          <path
+            d="m23.9995 18.0005c-3.3137 0-6 2.6863-6 6s2.6863 6 6 6 6-2.6863 6-6-2.6863-6-6-6z"
+            fill="url(#d)"
+          />
         </g>
-        <text fill="currentColor" fontFamily="Inter, sans-serif" fontSize="20" fontWeight="600" x="58" y="32">
+        <text
+          fill="currentColor"
+          fontFamily="Inter, sans-serif"
+          fontSize="20"
+          fontWeight="600"
+          x="58"
+          y="32"
+        >
           ScaleVenture
         </text>
         <defs>
-          <linearGradient id="b" gradientUnits="userSpaceOnUse" x1="24" x2="24" y1="0" y2="48">
+          <linearGradient
+            id="b"
+            gradientUnits="userSpaceOnUse"
+            x1="24"
+            x2="24"
+            y1="0"
+            y2="48"
+          >
             <stop stopColor="#3b82f6" />
             <stop offset="1" stopColor="#1d4ed8" />
           </linearGradient>
-          <linearGradient id="d" gradientUnits="userSpaceOnUse" x1="23.9995" x2="23.9995" y1="18.0005" y2="30.0005">
+          <linearGradient
+            id="d"
+            gradientUnits="userSpaceOnUse"
+            x1="23.9995"
+            x2="23.9995"
+            y1="18.0005"
+            y2="30.0005"
+          >
             <stop stopColor="#60a5fa" />
             <stop offset="1" stopColor="#3b82f6" />
           </linearGradient>
@@ -126,10 +195,12 @@ const caseStudies: CaseStudy[] = [
         </defs>
       </svg>
     ),
-    title: "ScaleVenture uses MorphAI to track engineering velocity and identify blockers before they impact delivery.",
-    features: ["Blocker Detection", "Sprint Planning", "Velocity Tracking"],
-    quote: "MorphAI gives us visibility into team health that used to require hours of manual reporting.",
-    attribution: "Sarah Johnson, VP Engineering, ScaleVenture",
+    title:
+      "Marcus uses RunBook to maintain consistency with his fitness and learning goals after struggling with motivation.",
+    features: ["Weekly Reviews", "Commitment Lock-In", "Behavior Analysis"],
+    quote:
+      "The AI remembers when I make excuses. After three weeks of 'I'll do it tomorrow,' it called me out. That's when things changed.",
+    attribution: "Marcus W., Solo Founder",
     accentColor: "#3b82f6",
     cards: [
       {
@@ -146,9 +217,15 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "eightball",
-    company: "DevFlow",
+    company: "Jordan R.",
     logo: (
-      <svg fill="none" height="48" viewBox="0 0 151 48" width="151" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        fill="none"
+        height="48"
+        viewBox="0 0 151 48"
+        width="151"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <g fill="#0A0D12">
           <path
             clipRule="evenodd"
@@ -158,10 +235,12 @@ const caseStudies: CaseStudy[] = [
         </g>
       </svg>
     ),
-    title: "DevFlow relies on MorphAI to automate async communication and maintain team alignment across time zones.",
-    features: ["Async Standups", "Task Automation"],
-    quote: "MorphAI transforms how distributed teams stay connected without endless meetings.",
-    attribution: "Marcus Williams, CTO, DevFlow",
+    title:
+      "Jordan uses RunBook to build a consistent writing habit and finish their first book project.",
+    features: ["Daily Accountability", "Progress Tracking", "Goal Setting"],
+    quote:
+      "I've tried every productivity app. RunBook is the first one that actually makes me show up. The voice meetings feel real—like I'm answering to an actual person.",
+    attribution: "Jordan R., Content Creator",
     accentColor: "#0A0D12",
     cards: [
       {
@@ -178,9 +257,15 @@ const caseStudies: CaseStudy[] = [
   },
   {
     id: "coreos",
-    company: "BuildWorks",
+    company: "Alex T.",
     logo: (
-      <svg fill="none" height="48" viewBox="0 0 155 48" width="155" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        fill="none"
+        height="48"
+        viewBox="0 0 155 48"
+        width="155"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <filter
           id="a"
           colorInterpolationFilters="sRGB"
@@ -191,7 +276,12 @@ const caseStudies: CaseStudy[] = [
           y="-3"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+          <feBlend
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            mode="normal"
+            result="shape"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -201,8 +291,15 @@ const caseStudies: CaseStudy[] = [
           <feOffset dy="-3" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend in2="shape" mode="normal" result="effect1_innerShadow_3046_38745" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
+          />
+          <feBlend
+            in2="shape"
+            mode="normal"
+            result="effect1_innerShadow_3046_38745"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -212,19 +309,38 @@ const caseStudies: CaseStudy[] = [
           <feOffset dy="3" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.1 0" />
-          <feBlend in2="effect1_innerShadow_3046_38745" mode="normal" result="effect2_innerShadow_3046_38745" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.1 0"
+          />
+          <feBlend
+            in2="effect1_innerShadow_3046_38745"
+            mode="normal"
+            result="effect2_innerShadow_3046_38745"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
             type="matrix"
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
           />
-          <feMorphology in="SourceAlpha" operator="erode" radius="1" result="effect3_innerShadow_3046_38745" />
+          <feMorphology
+            in="SourceAlpha"
+            operator="erode"
+            radius="1"
+            result="effect3_innerShadow_3046_38745"
+          />
           <feOffset />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0.0627451 0 0 0 0 0.0941176 0 0 0 0 0.156863 0 0 0 0.24 0" />
-          <feBlend in2="effect2_innerShadow_3046_38745" mode="normal" result="effect3_innerShadow_3046_38745" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0.0627451 0 0 0 0 0.0941176 0 0 0 0 0.156863 0 0 0 0.24 0"
+          />
+          <feBlend
+            in2="effect2_innerShadow_3046_38745"
+            mode="normal"
+            result="effect3_innerShadow_3046_38745"
+          />
         </filter>
         <filter
           id="b"
@@ -245,8 +361,15 @@ const caseStudies: CaseStudy[] = [
           <feOffset />
           <feGaussianBlur stdDeviation="0.375" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend in2="BackgroundImageFix" mode="normal" result="effect1_innerShadow_3046_38745" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
+          />
+          <feBlend
+            in2="BackgroundImageFix"
+            mode="normal"
+            result="effect1_innerShadow_3046_38745"
+          />
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -256,8 +379,15 @@ const caseStudies: CaseStudy[] = [
           <feOffset dy="1.5" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0" />
-          <feBlend in2="effect1_innerShadow_3046_38745" mode="normal" result="effect2_innerShadow_3046_38745" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"
+          />
+          <feBlend
+            in2="effect1_innerShadow_3046_38745"
+            mode="normal"
+            result="effect2_innerShadow_3046_38745"
+          />
         </filter>
         <g filter="url(#a)">
           <rect fill="#101828" height="48" rx="12" width="48" />
@@ -272,10 +402,12 @@ const caseStudies: CaseStudy[] = [
         </g>
       </svg>
     ),
-    title: "BuildWorks uses MorphAI to synchronize product and engineering teams during critical project phases.",
-    features: ["Cross-team Alignment", "Task Extraction", "Blocker Management"],
-    quote: "MorphAI identifies friction between teams before it becomes a problem.",
-    attribution: "Jordan Martinez, Head of Engineering, BuildWorks",
+    title:
+      "Alex uses RunBook to manage multiple goals across work, fitness, and personal projects without losing focus.",
+    features: ["Multi-Goal Tracking", "Priority Management", "Time Estimation"],
+    quote:
+      "RunBook helps me be honest about what I can actually commit to. The AI pushes back when I'm over-committing, which saves me from myself.",
+    attribution: "Alex T., Product Manager",
     accentColor: "#155eef",
     cards: [
       {
@@ -290,31 +422,43 @@ const caseStudies: CaseStudy[] = [
       },
     ],
   },
-]
-const FeatureBadge = ({
-  name,
-}: {
-  name: string
-}) => {
+];
+const FeatureBadge = ({ name }: { name: string }) => {
   const getIcon = (featureName: string) => {
     if (featureName.includes("Slack")) {
       return (
-        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 opacity-50">
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4 opacity-50"
+        >
           <path
             d="M6 2C6 1.44772 5.55228 1 5 1C4.44772 1 4 1.44772 4 2V6C4 6.55228 4.44772 7 5 7C5.55228 7 6 6.55228 6 6V2Z"
             fill="#E01E5A"
           />
-          <path d="M10 6C10.5523 6 11 5.55228 11 5C11 4.44772 10.55228 4 10 4H6V6H10Z" fill="#36C5F0" />
+          <path
+            d="M10 6C10.5523 6 11 5.55228 11 5C11 4.44772 10.55228 4 10 4H6V6H10Z"
+            fill="#36C5F0"
+          />
           <path
             d="M14 5C14 4.44772 13.5523 4 13 4C12.4477 4 12 4.44772 12 5V9C12 9.55228 12.4477 10 13 10C13.5523 10 14 9.55228 14 9V5Z"
             fill="#2EB67D"
           />
-          <path d="M6 10C5.44772 10 5 10.4477 5 11C5 11.5523 5.44772 12 6 12H10V10H6Z" fill="#ECB22E" />
+          <path
+            d="M6 10C5.44772 10 5 10.4477 5 11C5 11.5523 5.44772 12 6 12H10V10H6Z"
+            fill="#ECB22E"
+          />
         </svg>
-      )
+      );
     } else if (featureName.includes("Meeting")) {
       return (
-        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 opacity-50">
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4 opacity-50"
+        >
           <path
             d="M2 4C2 3.44772 2.44772 3 3 3H9C9.55228 3 10 3.44772 10 4V10C10 10.55228 9.55228 11 9 11H3C2.44772 11 2 10.55228 2 10V4Z"
             stroke="currentColor"
@@ -330,10 +474,15 @@ const FeatureBadge = ({
             strokeLinejoin="round"
           />
         </svg>
-      )
+      );
     } else if (featureName.includes("Sentiment")) {
       return (
-        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 opacity-50">
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4 opacity-50"
+        >
           <path
             d="M3 9L5 11L8 8L13 13"
             stroke="#10B981"
@@ -349,58 +498,36 @@ const FeatureBadge = ({
             strokeLinejoin="round"
           />
         </svg>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
   return (
     <div className="flex items-center gap-2 bg-white/75 shadow-sm border border-black/5 rounded-lg px-2 py-1 text-sm font-medium text-foreground">
       {getIcon(name)}
       {name}
     </div>
-  )
-}
+  );
+};
 const SlackCallCard = ({
   accentColor,
   delay,
   zIndex,
 }: {
-  accentColor: string
-  delay: number
-  zIndex: number
+  accentColor: string;
+  delay: number;
+  zIndex: number;
 }) => {
-  return null
-}
+  return null;
+};
 const MeetingTranscriptCard = ({
   accentColor,
   delay,
   zIndex,
 }: {
-  accentColor: string
-  delay: number
-  zIndex: number
-}) => {
-  return null
-}
-const SentimentReportCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string
-  delay: number
-  zIndex: number
-}) => {
-  return null
-}
-const NotionCollaborationCard = ({
-  accentColor,
-  delay,
-  zIndex,
-}: {
-  accentColor: string
-  delay: number
-  zIndex: number
+  accentColor: string;
+  delay: number;
+  zIndex: number;
 }) => {
   return (
     <motion.div
@@ -422,7 +549,107 @@ const NotionCollaborationCard = ({
       className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
       style={{
         backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
+        boxShadow:
+          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
+        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
+        transform: "translate(-190px, -70px)",
+        zIndex,
+      }}
+    >
+      <div className="flex flex-col space-y-5">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-semibold text-foreground">
+            Meeting Summary
+          </h4>
+          <span className="text-xs text-muted-foreground">Today</span>
+        </div>
+
+        <div className="space-y-3">
+          <div className="p-3 bg-muted/20 rounded-lg">
+            <div className="text-xs text-muted-foreground mb-1">
+              Goal Progress
+            </div>
+            <div className="text-sm font-semibold text-foreground">
+              Writing: Chapter 5
+            </div>
+            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
+              <div
+                className="h-full rounded-full"
+                style={{ width: "73%", backgroundColor: "#186d93" }}
+              />
+            </div>
+          </div>
+
+          <div className="p-3 bg-muted/20 rounded-lg">
+            <div className="text-xs text-muted-foreground mb-1">Commitment</div>
+            <div className="text-sm text-foreground">
+              Complete 2,000 words by next meeting
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+            <span className="text-sm text-foreground">Consistency streak</span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#c86651" }}
+            >
+              12 days
+            </span>
+          </div>
+        </div>
+
+        <div className="pt-3 border-t border-border/50">
+          <div className="text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Next meeting:</span>{" "}
+            Tomorrow 9:00 AM
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+const SentimentReportCard = ({
+  accentColor,
+  delay,
+  zIndex,
+}: {
+  accentColor: string;
+  delay: number;
+  zIndex: number;
+}) => {
+  return null;
+};
+const NotionCollaborationCard = ({
+  accentColor,
+  delay,
+  zIndex,
+}: {
+  accentColor: string;
+  delay: number;
+  zIndex: number;
+}) => {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 20,
+        scale: 0.95,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      transition={{
+        duration: 0.6,
+        ease: [0.76, 0, 0.24, 1],
+        delay,
+      }}
+      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
+      style={{
+        backgroundColor: "rgba(255, 255, 255, 0.85)",
+        boxShadow:
+          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
         filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-200px, -80px)",
         zIndex,
@@ -430,54 +657,81 @@ const NotionCollaborationCard = ({
     >
       <div className="flex flex-col space-y-5">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-foreground">Team Alignment</h4>
+          <h4 className="text-sm font-semibold text-foreground">
+            Team Alignment
+          </h4>
           <span className="text-xs text-muted-foreground">Real-time</span>
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-sm text-foreground">Design Team</span>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: "#186d93" }}
+              />
+              <span className="text-sm text-foreground">Goal Completion</span>
             </div>
-            <span className="text-sm font-semibold text-green-600">96%</span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#186d93" }}
+            >
+              96%
+            </span>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="text-sm text-foreground">Engineering</span>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: "#c86651" }}
+              />
+              <span className="text-sm text-foreground">Commitment Rate</span>
             </div>
-            <span className="text-sm font-semibold text-blue-600">94%</span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#c86651" }}
+            >
+              94%
+            </span>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-purple-500" />
-              <span className="text-sm text-foreground">Product</span>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: "#186d93" }}
+              />
+              <span className="text-sm text-foreground">Progress Tracking</span>
             </div>
-            <span className="text-sm font-semibold text-purple-600">92%</span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#186d93" }}
+            >
+              92%
+            </span>
           </div>
         </div>
 
         <div className="pt-3 border-t border-border/50">
           <div className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">12</span> active conversations
+            <span className="font-semibold text-foreground">12</span> active
+            conversations
           </div>
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
 const StripeGlobalCard = ({
   accentColor,
   delay,
   zIndex,
 }: {
-  accentColor: string
-  delay: number
-  zIndex: number
+  accentColor: string;
+  delay: number;
+  zIndex: number;
 }) => {
   return (
     <motion.div
@@ -499,7 +753,8 @@ const StripeGlobalCard = ({
       className="absolute w-[400px] rounded-xl p-6 backdrop-blur-xl"
       style={{
         backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
+        boxShadow:
+          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
         filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-180px, -60px)",
         zIndex,
@@ -507,50 +762,70 @@ const StripeGlobalCard = ({
     >
       <div className="flex flex-col space-y-5">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-foreground">Global Team Dynamics</h4>
+          <h4 className="text-sm font-semibold text-foreground">
+            Global Team Dynamics
+          </h4>
           <span className="text-xs text-muted-foreground">Last 24h</span>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">SF</div>
-            <div className="text-xs text-muted-foreground mt-1">San Francisco</div>
-            <div className="text-xs font-semibold text-green-600 mt-2">High</div>
+            <div className="text-2xl font-bold text-foreground">Wk 1</div>
+            <div className="text-xs text-muted-foreground mt-1">Week 1</div>
+            <div
+              className="text-xs font-semibold mt-2"
+              style={{ color: "#186d93" }}
+            >
+              On Track
+            </div>
           </div>
           <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">DUB</div>
-            <div className="text-xs text-muted-foreground mt-1">Dublin</div>
-            <div className="text-xs font-semibold text-blue-600 mt-2">Active</div>
+            <div className="text-2xl font-bold text-foreground">Wk 2</div>
+            <div className="text-xs text-muted-foreground mt-1">Week 2</div>
+            <div
+              className="text-xs font-semibold mt-2"
+              style={{ color: "#c86651" }}
+            >
+              Review
+            </div>
           </div>
           <div className="text-center p-3 bg-muted/20 rounded-lg">
-            <div className="text-2xl font-bold text-foreground">SG</div>
-            <div className="text-xs text-muted-foreground mt-1">Singapore</div>
-            <div className="text-xs font-semibold text-purple-600 mt-2">Peak</div>
+            <div className="text-2xl font-bold text-foreground">Wk 3</div>
+            <div className="text-xs text-muted-foreground mt-1">Week 3</div>
+            <div
+              className="text-xs font-semibold mt-2"
+              style={{ color: "#186d93" }}
+            >
+              Active
+            </div>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Cross-office velocity</span>
+            <span className="text-muted-foreground">Overall Progress</span>
             <span className="font-semibold text-foreground">+28%</span>
           </div>
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-            <div className="h-full rounded-full" style={{ width: "87%", backgroundColor: accentColor }} />
+            <div
+              className="h-full rounded-full"
+              style={{ width: "87%", backgroundColor: "#186d93" }}
+            />
           </div>
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
 const FigmaSprintCard = ({
   accentColor,
   delay,
   zIndex,
 }: {
-  accentColor: string
-  delay: number
-  zIndex: number
+  accentColor: string;
+  delay: number;
+  zIndex: number;
 }) => {
   return (
     <motion.div
@@ -572,7 +847,8 @@ const FigmaSprintCard = ({
       className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
       style={{
         backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
+        boxShadow:
+          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
         filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-190px, -70px)",
         zIndex,
@@ -583,14 +859,24 @@ const FigmaSprintCard = ({
           <div className="flex items-center gap-2">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
-              style={{ backgroundColor: accentColor }}
+              style={{ backgroundColor: "#186d93" }}
             >
               <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
-                <rect x="3" y="3" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                <rect
+                  x="3"
+                  y="3"
+                  width="10"
+                  height="10"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
               </svg>
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-foreground">Sprint Planning</h4>
+              <h4 className="text-sm font-semibold text-foreground">
+                Sprint Planning
+              </h4>
               <p className="text-xs text-muted-foreground">Week 3 • Day 2</p>
             </div>
           </div>
@@ -598,85 +884,102 @@ const FigmaSprintCard = ({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">Design handoff clarity</span>
+            <span className="text-sm text-foreground">
+              Goal Completion Rate
+            </span>
             <div className="flex items-center gap-2">
               <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-green-500" style={{ width: "94%" }} />
+                <div
+                  className="h-full"
+                  style={{ width: "94%", backgroundColor: "#186d93" }}
+                />
               </div>
               <span className="text-xs font-semibold text-foreground">94%</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">Team sentiment</span>
+            <span className="text-sm text-foreground">
+              Accountability Score
+            </span>
             <div className="flex items-center gap-2">
               <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500" style={{ width: "89%" }} />
+                <div
+                  className="h-full"
+                  style={{ width: "89%", backgroundColor: "#c86651" }}
+                />
               </div>
               <span className="text-xs font-semibold text-foreground">89%</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-            <span className="text-sm text-foreground">Friction detection</span>
+            <span className="text-sm text-foreground">Pattern Recognition</span>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-green-600">Low</span>
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#186d93" }}
+              >
+                Active
+              </span>
             </div>
           </div>
         </div>
 
         <div className="pt-3 border-t border-border/50">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Blockers identified</span>
+            <span className="text-muted-foreground">Goals in progress</span>
             <span className="font-semibold text-foreground">2</span>
           </div>
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
 export const CaseStudiesCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
-  const autoPlayRef = useRef<NodeJS.Timeout | null>(null)
-  const currentStudy = caseStudies[currentIndex]
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  const currentStudy = caseStudies[currentIndex];
   const startAutoPlay = () => {
-    if (autoPlayRef.current) clearInterval(autoPlayRef.current)
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     autoPlayRef.current = setInterval(() => {
-      nextSlide()
-    }, 5000)
-  }
+      nextSlide();
+    }, 5000);
+  };
   const stopAutoPlay = () => {
     if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current)
-      autoPlayRef.current = null
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
     }
-  }
+  };
   useEffect(() => {
     if (isAutoPlaying) {
-      startAutoPlay()
+      startAutoPlay();
     } else {
-      stopAutoPlay()
+      stopAutoPlay();
     }
-    return () => stopAutoPlay()
-  }, [isAutoPlaying, currentIndex])
+    return () => stopAutoPlay();
+  }, [isAutoPlaying, currentIndex]);
   const nextSlide = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev + 1) % caseStudies.length)
-  }
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % caseStudies.length);
+  };
   const prevSlide = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev - 1 + caseStudies.length) % caseStudies.length)
-  }
+    setDirection(-1);
+    setCurrentIndex(
+      (prev) => (prev - 1 + caseStudies.length) % caseStudies.length
+    );
+  };
   const goToSlide = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1)
-    setCurrentIndex(index)
-  }
+    setDirection(index > currentIndex ? 1 : -1);
+    setCurrentIndex(index);
+  };
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
+      x: direction > 0 ? "100%" : "-100%",
       opacity: 0,
     }),
     center: {
@@ -684,17 +987,18 @@ export const CaseStudiesCarousel = () => {
       opacity: 1,
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
+      x: direction < 0 ? "100%" : "-100%",
       opacity: 0,
     }),
-  }
+  };
   return (
     <div
-      className="w-full min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center py-24 px-8"
+      id="case-studies"
+      className="w-full min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center py-24 px-8 overflow-x-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
-      <div className="max-w-7xl w-full">
+      <div className="max-w-7xl w-full overflow-x-hidden">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h1
@@ -705,7 +1009,7 @@ export const CaseStudiesCarousel = () => {
               fontSize: "40px",
             }}
           >
-            Customer Success Stories
+            Real Stories from Real Users
           </h1>
           <p
             className="text-lg leading-7 text-muted-foreground max-w-2xl mx-auto"
@@ -713,13 +1017,15 @@ export const CaseStudiesCarousel = () => {
               fontFamily: "var(--font-figtree), Figtree",
             }}
           >
-            See how leading teams use MorphAI to gain clarity on collaboration and team alignment.
+            See how remote professionals, solo founders, and ambitious
+            individuals use RunBook to turn goals into commitments and excuses
+            into action.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-8">
+          <div className="space-y-8 overflow-x-hidden">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={currentStudy.id}
@@ -738,7 +1044,7 @@ export const CaseStudiesCarousel = () => {
                     duration: 0.2,
                   },
                 }}
-                className="space-y-6"
+                className="space-y-6 overflow-x-hidden"
               >
                 <div className="text-foreground/60">{currentStudy.logo}</div>
 
@@ -787,7 +1093,11 @@ export const CaseStudiesCarousel = () => {
                   <button
                     key={idx}
                     onClick={() => goToSlide(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-8 bg-primary" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      idx === currentIndex
+                        ? "w-8 bg-primary"
+                        : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
@@ -829,7 +1139,7 @@ export const CaseStudiesCarousel = () => {
           </div>
 
           {/* Right Content - Card Visualization */}
-          <div className="relative h-[500px] flex items-center justify-center">
+          <div className="relative h-[500px] flex items-center justify-center overflow-x-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStudy.id}
@@ -845,30 +1155,57 @@ export const CaseStudiesCarousel = () => {
                 transition={{
                   duration: 0.3,
                 }}
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative w-full h-full flex items-center justify-center overflow-x-hidden"
               >
                 {currentStudy.id === "notion" && (
                   <>
-                    <NotionCollaborationCard accentColor={currentStudy.accentColor} delay={0} zIndex={1} />
-                    <SlackCallCard accentColor={currentStudy.accentColor} delay={0.1} zIndex={2} />
+                    <NotionCollaborationCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0}
+                      zIndex={1}
+                    />
+                    <SlackCallCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0.1}
+                      zIndex={2}
+                    />
                   </>
                 )}
                 {currentStudy.id === "cloudwatch" && (
                   <>
-                    <StripeGlobalCard accentColor={currentStudy.accentColor} delay={0} zIndex={1} />
-                    <SlackCallCard accentColor={currentStudy.accentColor} delay={0.1} zIndex={2} />
+                    <StripeGlobalCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0}
+                      zIndex={1}
+                    />
+                    <SlackCallCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0.1}
+                      zIndex={2}
+                    />
                   </>
                 )}
                 {currentStudy.id === "eightball" && (
                   <>
-                    <MeetingTranscriptCard accentColor={currentStudy.accentColor} delay={0} zIndex={1} />
-                    <SlackCallCard accentColor={currentStudy.accentColor} delay={0.1} zIndex={2} />
+                    <MeetingTranscriptCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0}
+                      zIndex={1}
+                    />
+                    <SlackCallCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0.1}
+                      zIndex={2}
+                    />
                   </>
                 )}
                 {currentStudy.id === "coreos" && (
                   <>
-                    <FigmaSprintCard accentColor={currentStudy.accentColor} delay={0} zIndex={1} />
-                    <MeetingTranscriptCard accentColor={currentStudy.accentColor} delay={0.1} zIndex={2} />
+                    <FigmaSprintCard
+                      accentColor={currentStudy.accentColor}
+                      delay={0}
+                      zIndex={1}
+                    />
                   </>
                 )}
               </motion.div>
@@ -877,5 +1214,5 @@ export const CaseStudiesCarousel = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
