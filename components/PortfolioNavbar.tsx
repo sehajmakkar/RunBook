@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 const navigationLinks = [
   {
     name: "Features",
@@ -26,6 +27,7 @@ const navigationLinks = [
 export const PortfolioNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -98,7 +100,18 @@ export const PortfolioNavbar = () => {
             </div>
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-all duration-200"
+              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              {theme === "light" ? (
+                <Moon size={20} strokeWidth={1.5} />
+              ) : (
+                <Sun size={20} strokeWidth={1.5} />
+              )}
+            </button>
             <button
               onClick={() => handleLinkClick("#pricing")}
               className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
@@ -117,7 +130,18 @@ export const PortfolioNavbar = () => {
             </button>
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-all duration-200"
+              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              {theme === "light" ? (
+                <Moon size={20} strokeWidth={1.5} />
+              ) : (
+                <Sun size={20} strokeWidth={1.5} />
+              )}
+            </button>
             <button
               onClick={toggleMobileMenu}
               className="text-foreground hover:text-primary p-2 rounded-md transition-colors duration-200"

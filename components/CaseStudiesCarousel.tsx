@@ -503,7 +503,7 @@ const FeatureBadge = ({ name }: { name: string }) => {
     return null;
   };
   return (
-    <div className="flex items-center gap-2 bg-white/75 shadow-sm border border-black/5 rounded-lg px-2 py-1 text-sm font-medium text-foreground">
+    <div className="flex items-center gap-2 bg-background/75 shadow-sm border border-border rounded-lg px-2 py-1 text-sm font-medium text-foreground">
       {getIcon(name)}
       {name}
     </div>
@@ -546,12 +546,8 @@ const MeetingTranscriptCard = ({
         ease: [0.76, 0, 0.24, 1],
         delay,
       }}
-      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
+      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl bg-card/85 dark:bg-card/90 shadow-lg border border-border/50"
       style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-190px, -70px)",
         zIndex,
       }}
@@ -645,12 +641,8 @@ const NotionCollaborationCard = ({
         ease: [0.76, 0, 0.24, 1],
         delay,
       }}
-      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
+      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl bg-card/85 dark:bg-card/90 shadow-lg border border-border/50"
       style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-200px, -80px)",
         zIndex,
       }}
@@ -750,12 +742,8 @@ const StripeGlobalCard = ({
         ease: [0.76, 0, 0.24, 1],
         delay,
       }}
-      className="absolute w-[400px] rounded-xl p-6 backdrop-blur-xl"
+      className="absolute w-[400px] rounded-xl p-6 backdrop-blur-xl bg-card/85 dark:bg-card/90 shadow-lg border border-border/50"
       style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-180px, -60px)",
         zIndex,
       }}
@@ -844,12 +832,8 @@ const FigmaSprintCard = ({
         ease: [0.76, 0, 0.24, 1],
         delay,
       }}
-      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl"
+      className="absolute w-[380px] rounded-xl p-6 backdrop-blur-xl bg-card/85 dark:bg-card/90 shadow-lg border border-border/50"
       style={{
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        boxShadow:
-          "inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 32px 0 rgba(0, 0, 0, 0.12)",
-        filter: "drop-shadow(0 4px 6px rgba(30, 30, 44, 0.15))",
         transform: "translate(-190px, -70px)",
         zIndex,
       }}

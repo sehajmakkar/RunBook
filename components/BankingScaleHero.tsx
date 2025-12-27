@@ -74,7 +74,7 @@ export const BankingScaleHero = () => {
 
   // @return
   return (
-    <div id="features" className="w-full overflow-hidden bg-white">
+    <div id="features" className="w-full overflow-hidden bg-background">
       <div className="mx-auto max-w-7xl px-8 py-24 pt-16">
         <div className="grid grid-cols-12 gap-5 gap-y-16">
           <div className="col-span-12 md:col-span-6 relative z-10">
@@ -125,7 +125,7 @@ export const BankingScaleHero = () => {
             </div>
 
             <h2
-              className="text-[40px] font-normal leading-tight tracking-tight text-[#111A4A] mb-6"
+              className="text-[40px] font-normal leading-tight tracking-tight text-foreground mb-6"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
                 fontSize: "40px",
@@ -146,7 +146,7 @@ export const BankingScaleHero = () => {
             </h2>
 
             <p
-              className="text-lg leading-6 text-[#111A4A] opacity-60 mt-0 mb-6"
+              className="text-lg leading-6 text-foreground opacity-60 mt-0 mb-6"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
               }}
@@ -157,7 +157,7 @@ export const BankingScaleHero = () => {
               accountability.
             </p>
 
-            <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-[#232730] bg-white/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)]">
+            <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-foreground bg-secondary/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] dark:shadow-[0_1px_1px_0_rgba(0,0,0,0),0_0_0_1px_rgba(168,170,180,0.2)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)] dark:hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.2),0_0_0_1px_rgba(168,170,180,0.3)]">
               <span className="relative z-10 flex items-center gap-1">
                 Learn how RunBook works
                 <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
