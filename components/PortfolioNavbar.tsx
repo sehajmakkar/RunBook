@@ -2,8 +2,82 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { cn } from "@/lib/utils";
+
+// Animated Theme Toggle Button
+// Light mode: shows MOON (white bg, black icon) - click to switch to dark
+// Dark mode: shows SUN (black bg, white icon) - click to switch to light
+const AnimatedThemeToggle = ({
+  isDark,
+  onToggle,
+  className = "",
+}: {
+  isDark: boolean;
+  onToggle: () => void;
+  className?: string;
+}) => {
+  // showSun = true means we display the sun icon (in dark mode, to switch to light)
+  // showSun = false means we display the moon icon (in light mode, to switch to dark)
+  const showSun = isDark;
+
+  return (
+    <button
+      type="button"
+      className={cn(
+        "rounded-full transition-all duration-300 active:scale-95",
+        isDark ? "bg-background text-foreground" : "bg-background text-foreground",
+        className
+      )}
+      onClick={onToggle}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        fill="currentColor"
+        strokeLinecap="round"
+        viewBox="0 0 32 32"
+      >
+        <clipPath id="theme-toggle-clip">
+          <motion.path
+            animate={{ y: showSun ? 0 : 10, x: showSun ? 0 : -12 }}
+            transition={{ ease: "easeInOut", duration: 0.35 }}
+            d="M0-5h30a1 1 0 0 0 9 13v24H0Z"
+          />
+        </clipPath>
+        <g clipPath="url(#theme-toggle-clip)">
+          <motion.circle
+            animate={{ r: showSun ? 8 : 10 }}
+            transition={{ ease: "easeInOut", duration: 0.35 }}
+            cx="16"
+            cy="16"
+          />
+          <motion.g
+            animate={{
+              rotate: showSun ? 0 : -100,
+              scale: showSun ? 1 : 0.5,
+              opacity: showSun ? 1 : 0,
+            }}
+            transition={{ ease: "easeInOut", duration: 0.35 }}
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M16 5.5v-4" />
+            <path d="M16 30.5v-4" />
+            <path d="M1.5 16h4" />
+            <path d="M26.5 16h4" />
+            <path d="m23.4 8.6 2.8-2.8" />
+            <path d="m5.7 26.3 2.9-2.9" />
+            <path d="m5.8 5.8 2.8 2.8" />
+            <path d="m23.4 23.4 2.9 2.9" />
+          </motion.g>
+        </g>
+      </svg>
+    </button>
+  );
+};
 const navigationLinks = [
   {
     name: "Features",
@@ -101,17 +175,11 @@ export const PortfolioNavbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-all duration-200"
-              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-            >
-              {theme === "light" ? (
-                <Moon size={20} strokeWidth={1.5} />
-              ) : (
-                <Sun size={20} strokeWidth={1.5} />
-              )}
-            </button>
+            <AnimatedThemeToggle
+              isDark={theme === "dark"}
+              onToggle={toggleTheme}
+              className="size-10 p-2"
+            />
             <button
               onClick={() => handleLinkClick("#pricing")}
               className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
@@ -131,17 +199,11 @@ export const PortfolioNavbar = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full bg-secondary hover:bg-secondary/80 text-foreground transition-all duration-200"
-              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-            >
-              {theme === "light" ? (
-                <Moon size={20} strokeWidth={1.5} />
-              ) : (
-                <Sun size={20} strokeWidth={1.5} />
-              )}
-            </button>
+            <AnimatedThemeToggle
+              isDark={theme === "dark"}
+              onToggle={toggleTheme}
+              className="size-9 p-1.5"
+            />
             <button
               onClick={toggleMobileMenu}
               className="text-foreground hover:text-primary p-2 rounded-md transition-colors duration-200"
