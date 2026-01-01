@@ -37,13 +37,13 @@ export const FAQSection = ({
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
-    <section id="faq" className="w-full py-24 px-8 bg-white">
+    <section id="faq" className="w-full py-24 px-8 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-12 gap-16">
           {/* Left Column - Title */}
           <div className="lg:col-span-4">
             <h2
-              className="text-[40px] leading-tight font-normal text-[#202020] tracking-tight sticky top-24"
+              className="text-[40px] leading-tight font-normal text-foreground tracking-tight sticky top-24"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
                 fontWeight: "400",
@@ -60,7 +60,7 @@ export const FAQSection = ({
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="border-b border-[#e5e5e5] last:border-b-0"
+                  className="border-b border-border last:border-b-0"
                 >
                   <button
                     onClick={() => toggleFAQ(index)}
@@ -68,7 +68,7 @@ export const FAQSection = ({
                     aria-expanded={openIndex === index}
                   >
                     <span
-                      className="text-lg leading-7 text-[#202020] pr-8"
+                      className="text-lg leading-7 text-foreground pr-8"
                       style={{
                         fontFamily: "var(--font-figtree), Figtree",
                         fontWeight: "400",
@@ -87,7 +87,7 @@ export const FAQSection = ({
                       className="flex-shrink-0"
                     >
                       <Plus
-                        className="w-6 h-6 text-[#202020]"
+                        className="w-6 h-6 text-foreground"
                         strokeWidth={1.5}
                       />
                     </motion.div>
@@ -116,7 +116,7 @@ export const FAQSection = ({
                       >
                         <div className="pb-6 pr-12">
                           <p
-                            className="text-lg leading-6 text-[#666666]"
+                            className="text-lg leading-6 text-muted-foreground"
                             style={{
                               fontFamily: "var(--font-figtree), Figtree",
                             }}

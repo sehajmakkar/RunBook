@@ -51,12 +51,12 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               duration: 0.8,
               ease: [0.645, 0.045, 0.355, 1],
             }}
-            className="col-span-12 lg:col-span-6 bg-[#e9e9e9] rounded-2xl sm:rounded-3xl lg:rounded-[40px] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 flex flex-col justify-end lg:aspect-square min-h-[400px] md:min-h-[500px] lg:min-h-0 overflow-hidden"
+            className="col-span-12 lg:col-span-6 bg-secondary rounded-2xl sm:rounded-3xl lg:rounded-[40px] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 flex flex-col justify-end lg:aspect-square min-h-[400px] md:min-h-[500px] lg:min-h-0 overflow-hidden"
           >
             <a
               href={primaryButtonHref}
               onClick={(e) => e.preventDefault()}
-              className="flex flex-col gap-1 text-[#9a9a9a]"
+              className="flex flex-col gap-1 text-muted-foreground"
             >
               <motion.span
                 initial={{
@@ -96,7 +96,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             </a>
 
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] leading-tight sm:leading-[1.1] md:leading-[1.1] lg:leading-[60px] tracking-tight text-[#202020] max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] leading-tight sm:leading-[1.1] md:leading-[1.1] lg:leading-[60px] tracking-tight text-foreground max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
               style={{
                 fontWeight: "500",
                 fontFamily: "var(--font-figtree), Figtree",
@@ -106,7 +106,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             </h1>
 
             <p
-              className="text-base sm:text-lg leading-6 sm:leading-7 text-[#404040] max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
+              className="text-base sm:text-lg leading-6 sm:leading-7 text-muted-foreground max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
               }}
@@ -142,7 +142,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
                 <a
                   href={secondaryButtonHref}
                   onClick={(e) => e.preventDefault()}
-                  className="block cursor-pointer text-[#202020] border border-[#202020] rounded-full px-4 sm:px-[18px] py-3 sm:py-[15px] text-sm sm:text-base leading-4 text-center sm:text-left whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
+                  className="block cursor-pointer text-foreground border border-foreground rounded-full px-4 sm:px-[18px] py-3 sm:py-[15px] text-sm sm:text-base leading-4 text-center sm:text-left whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
                 >
                   {secondaryButtonText}
                 </a>
@@ -162,7 +162,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               ease: [0.645, 0.045, 0.355, 1],
               delay: 0.2,
             }}
-            className="col-span-12 lg:col-span-6 bg-white rounded-2xl sm:rounded-3xl lg:rounded-[40px] flex justify-center items-center aspect-square min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-0 overflow-hidden"
+            className="col-span-12 lg:col-span-6 bg-card rounded-2xl sm:rounded-3xl lg:rounded-[40px] flex justify-center items-center aspect-square min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-0 overflow-hidden"
             style={{
               backgroundImage: "url(/runbook-hero.png)",
               backgroundSize: "cover",

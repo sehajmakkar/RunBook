@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 type IntegrationApp = {
-  name: string
-  logo: string
-}
+  name: string;
+  logo: string;
+};
 type IntegrationCarouselProps = {
-  buttonText?: string
-  buttonHref?: string
-  title?: string
-  subtitle?: string
-  topRowApps?: IntegrationApp[]
-  bottomRowApps?: IntegrationApp[]
-}
+  buttonText?: string;
+  buttonHref?: string;
+  title?: string;
+  subtitle?: string;
+  topRowApps?: IntegrationApp[];
+  bottomRowApps?: IntegrationApp[];
+};
 const defaultTopRowApps: IntegrationApp[] = [
   {
     name: "Integration 1",
@@ -63,7 +63,7 @@ const defaultTopRowApps: IntegrationApp[] = [
     name: "Integration 5",
     logo: "/images/logoipsum-381.png",
   },
-]
+];
 const defaultBottomRowApps: IntegrationApp[] = [
   {
     name: "Integration 6",
@@ -113,7 +113,7 @@ const defaultBottomRowApps: IntegrationApp[] = [
     name: "Integration 3",
     logo: "/images/logoipsum-379.png",
   },
-]
+];
 
 // @component: IntegrationCarousel
 export const IntegrationCarousel = ({
@@ -124,44 +124,44 @@ export const IntegrationCarousel = ({
   topRowApps = defaultTopRowApps,
   bottomRowApps = defaultBottomRowApps,
 }: IntegrationCarouselProps) => {
-  const topRowRef = useRef<HTMLDivElement>(null)
-  const bottomRowRef = useRef<HTMLDivElement>(null)
+  const topRowRef = useRef<HTMLDivElement>(null);
+  const bottomRowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let topAnimationId: number
-    let bottomAnimationId: number
-    let topPosition = 0
-    let bottomPosition = 0
+    let topAnimationId: number;
+    let bottomAnimationId: number;
+    let topPosition = 0;
+    let bottomPosition = 0;
     const animateTopRow = () => {
       if (topRowRef.current) {
-        topPosition -= 0.5
+        topPosition -= 0.5;
         if (Math.abs(topPosition) >= topRowRef.current.scrollWidth / 2) {
-          topPosition = 0
+          topPosition = 0;
         }
-        topRowRef.current.style.transform = `translateX(${topPosition}px)`
+        topRowRef.current.style.transform = `translateX(${topPosition}px)`;
       }
-      topAnimationId = requestAnimationFrame(animateTopRow)
-    }
+      topAnimationId = requestAnimationFrame(animateTopRow);
+    };
     const animateBottomRow = () => {
       if (bottomRowRef.current) {
-        bottomPosition -= 0.65
+        bottomPosition -= 0.65;
         if (Math.abs(bottomPosition) >= bottomRowRef.current.scrollWidth / 2) {
-          bottomPosition = 0
+          bottomPosition = 0;
         }
-        bottomRowRef.current.style.transform = `translateX(${bottomPosition}px)`
+        bottomRowRef.current.style.transform = `translateX(${bottomPosition}px)`;
       }
-      bottomAnimationId = requestAnimationFrame(animateBottomRow)
-    }
-    topAnimationId = requestAnimationFrame(animateTopRow)
-    bottomAnimationId = requestAnimationFrame(animateBottomRow)
+      bottomAnimationId = requestAnimationFrame(animateBottomRow);
+    };
+    topAnimationId = requestAnimationFrame(animateTopRow);
+    bottomAnimationId = requestAnimationFrame(animateBottomRow);
     return () => {
-      cancelAnimationFrame(topAnimationId)
-      cancelAnimationFrame(bottomAnimationId)
-    }
-  }, [])
+      cancelAnimationFrame(topAnimationId);
+      cancelAnimationFrame(bottomAnimationId);
+    };
+  }, []);
 
   // @return
   return (
-    <div className="w-full py-24 bg-white">
+    <div className="w-full py-24 bg-background">
       <div className="max-w-[680px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -172,7 +172,7 @@ export const IntegrationCarousel = ({
         >
           <div className="flex flex-col items-center gap-4">
             <h2
-              className="text-[40px] leading-tight font-normal text-[#222222] text-center tracking-tight mb-0"
+              className="text-[40px] leading-tight font-normal text-foreground text-center tracking-tight mb-0"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
                 fontWeight: "400",
@@ -182,7 +182,7 @@ export const IntegrationCarousel = ({
               {title}
             </h2>
             <p
-              className="text-lg leading-7 text-[#666666] text-center max-w-[600px] mt-2"
+              className="text-lg leading-7 text-muted-foreground text-center max-w-[600px] mt-2"
               style={{
                 fontFamily: "var(--font-figtree), Figtree",
               }}
@@ -199,12 +199,7 @@ export const IntegrationCarousel = ({
           >
             <a
               href={buttonHref}
-              className="inline-block px-5 py-2.5 rounded-full bg-white text-[#222222] text-[15px] font-medium leading-6 text-center whitespace-nowrap transition-all duration-75 ease-out w-[182px] cursor-pointer hover:shadow-lg"
-              style={{
-                boxShadow:
-                  "0 -1px 0 0 rgb(181, 181, 181) inset, -1px 0 0 0 rgb(227, 227, 227) inset, 1px 0 0 0 rgb(227, 227, 227) inset, 0 1px 0 0 rgb(227, 227, 227) inset",
-                backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.06) 80%, rgba(255, 255, 255, 0.12))",
-              }}
+              className="inline-block px-5 py-2.5 rounded-full bg-card text-foreground text-[15px] font-medium leading-6 text-center whitespace-nowrap transition-all duration-75 ease-out w-[182px] cursor-pointer hover:shadow-lg border border-border"
             >
               {buttonText}
             </a>
@@ -223,31 +218,20 @@ export const IntegrationCarousel = ({
           {[...topRowApps, ...topRowApps].map((app, index) => (
             <div
               key={`top-${index}`}
-              className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0"
-              style={{
-                backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                boxShadow:
-                  "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
-              }}
+              className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0 bg-card border border-border shadow-sm"
             >
-              <img src={app.logo || "/placeholder.svg"} alt={app.name} className="w-9 h-9 block object-contain" />
+              <img
+                src={app.logo || "/placeholder.svg"}
+                alt={app.name}
+                className="w-9 h-9 block object-contain"
+              />
             </div>
           ))}
         </div>
 
-        <div
-          className="absolute top-0 right-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(255, 255, 255))",
-          }}
-        />
+        <div className="absolute top-0 right-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none bg-gradient-to-l from-background to-transparent" />
 
-        <div
-          className="absolute top-0 left-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(90deg, rgb(255, 255, 255), rgba(0, 0, 0, 0))",
-          }}
-        />
+        <div className="absolute top-0 left-0 bottom-0 w-60 h-[268px] z-10 pointer-events-none bg-gradient-to-r from-background to-transparent" />
 
         <div
           ref={bottomRowRef}
@@ -259,18 +243,17 @@ export const IntegrationCarousel = ({
           {[...bottomRowApps, ...bottomRowApps].map((app, index) => (
             <div
               key={`bottom-${index}`}
-              className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0"
-              style={{
-                backgroundImage: "linear-gradient(rgb(255, 255, 255), rgb(252, 252, 252))",
-                boxShadow:
-                  "rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 3px 3px -1.4px, rgba(0, 0, 0, 0.04) 0px 6px 6px -3px, rgba(0, 0, 0, 0.04) 0px 12px 12px -6px, rgba(0, 0, 0, 0.04) 0px 12px 12px -12px",
-              }}
+              className="flex items-center justify-center w-24 h-24 rounded-3xl flex-shrink-0 bg-card border border-border shadow-sm"
             >
-              <img src={app.logo || "/placeholder.svg"} alt={app.name} className="w-9 h-9 block object-contain" />
+              <img
+                src={app.logo || "/placeholder.svg"}
+                alt={app.name}
+                className="w-9 h-9 block object-contain"
+              />
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
