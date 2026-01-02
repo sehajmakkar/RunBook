@@ -22,9 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "RunBook",
+  description: "The AI Accountability Manager that holds you accountable",
   icons: {
     icon: "/icon.svg",
   },
