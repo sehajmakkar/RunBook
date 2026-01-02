@@ -1,35 +1,63 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 type ProductTeaserCardProps = {
   dailyVolume?: string;
   dailyVolumeLabel?: string;
-  headline?: string;
   subheadline?: string;
   description?: string;
-  videoSrc?: string;
-  posterSrc?: string;
   primaryButtonText?: string;
   primaryButtonHref?: string;
   secondaryButtonText?: string;
   secondaryButtonHref?: string;
 };
 
+// Rotating text configuration with distinct color themes
+const rotatingWords = [
+  {
+    word: "Manager",
+    textColor: "#156d95",
+    pillBg: "rgba(21, 109, 149, 0.12)",
+    shadowColor: "rgba(21, 109, 149, 0.25)",
+  },
+  {
+    word: "Partner",
+    textColor: "#b5651d",
+    pillBg: "rgba(181, 101, 29, 0.12)",
+    shadowColor: "rgba(181, 101, 29, 0.25)",
+  },
+  {
+    word: "Mentor",
+    textColor: "#2d8659",
+    pillBg: "rgba(45, 134, 89, 0.12)",
+    shadowColor: "rgba(45, 134, 89, 0.25)",
+  },
+];
+
 // @component: ProductTeaserCard
 export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentWord = rotatingWords[currentIndex];
+
   const {
     dailyVolume = "12,847",
     dailyVolumeLabel = "ACCOUNTABILITY MEETINGS COMPLETED",
-    headline = "AI Manager that holds you accountable",
     subheadline = "RunBook runs scheduled voice meetings to check in on your goals—just like a workplace stand-up. No more ignoring your to-do list. No more excuses. Just real accountability.",
     description = "Join remote professionals, solo founders, and productivity-focused individuals who use RunBook to turn goals into commitments. Experience the pressure of a real manager who remembers your promises and questions incomplete work.",
-    videoSrc = "https://cdn.sanity.io/files/1t8iva7t/production/a2cbbed7c998cf93e7ecb6dae75bab42b13139c2.mp4",
-    posterSrc = "/images/design-mode/9ad78a5534a46e77bafe116ce1c38172c60dc21a-1069x1068.png",
     primaryButtonText = "Start your first meeting",
     secondaryButtonText = "Learn how it works",
-    primaryButtonHref = "#", // Add this line to declare primaryButtonHref
-    secondaryButtonHref = "#", // Add this line to declare secondaryButtonHref
+    primaryButtonHref = "#",
+    secondaryButtonHref = "#",
   } = props;
 
   // @return
@@ -53,7 +81,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
             }}
             className="col-span-12 lg:col-span-6 bg-secondary rounded-2xl sm:rounded-3xl lg:rounded-[40px] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 flex flex-col justify-end lg:aspect-square min-h-[400px] md:min-h-[500px] lg:min-h-0 overflow-hidden"
           >
-            <a
+            {/* <a
               href={primaryButtonHref}
               onClick={(e) => e.preventDefault()}
               className="flex flex-col gap-1 text-muted-foreground"
@@ -93,16 +121,58 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               >
                 {dailyVolume}
               </span>
-            </a>
+            </a> */}
 
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] leading-tight sm:leading-[1.1] md:leading-[1.1] lg:leading-[60px] tracking-tight text-foreground max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] leading-tight sm:leading-[1.1] md:leading-[1.1] lg:leading-[60px] tracking-tight text-foreground max-w-full sm:max-w-[520px] mb-4 sm:mb-5 md:mb-6"
               style={{
                 fontWeight: "500",
                 fontFamily: "var(--font-figtree), Figtree",
               }}
             >
-              {headline}
+              Your AI{" "}
+              <motion.span
+                className="inline-flex items-center justify-center rounded-full px-3 sm:px-4 md:px-5 py-1 sm:py-1.5 md:py-2 align-middle"
+                style={{
+                  minWidth: "250px",
+                  width: "fit-content",
+                  backgroundColor: currentWord.pillBg,
+                  boxShadow: `inset 0 2px 8px ${currentWord.shadowColor}, inset 0 1px 2px ${currentWord.shadowColor}`,
+                }}
+                animate={{
+                  backgroundColor: currentWord.pillBg,
+                  boxShadow: `inset 0 2px 8px ${currentWord.shadowColor}, inset 0 1px 2px ${currentWord.shadowColor}`,
+                }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+              >
+                <span
+                  className="relative overflow-hidden h-[1.1em] flex items-center justify-center"
+                  style={{ minWidth: "250px" }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={currentWord.word}
+                      initial={{ y: "100%", opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: "-100%", opacity: 0 }}
+                      transition={{
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 300,
+                        duration: 0.4,
+                      }}
+                      className="absolute whitespace-nowrap"
+                      style={{
+                        color: currentWord.textColor,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {currentWord.word}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+              </motion.span>{" "}
+              that holds you accountable.
             </h1>
 
             <p
