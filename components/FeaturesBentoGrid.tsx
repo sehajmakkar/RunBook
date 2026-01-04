@@ -4,6 +4,14 @@ import * as React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/registry/magicui/animated-beam";
+import {
+  FileDescriptionIcon,
+  CheckedIcon,
+  QuestionMarkIcon,
+  ChartHistogramIcon,
+  LockIcon,
+  type AnimatedIconHandle,
+} from "@/components/animated-icons";
 
 // Animation variants for the container to stagger children
 const containerVariants = {
@@ -726,104 +734,52 @@ const AccountabilityCard = () => {
   );
 };
 
-// SVG Icons for Meeting Flow
-const FlowIcons = {
-  review: (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14,2 14,8 20,8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10,9 9,9 8,9" />
-    </svg>
-  ),
-  progress: (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9,11 12,14 22,4" />
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
-  ),
-  interrogate: (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  ),
-  patterns: (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  ),
-  lockin: (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  ),
-};
-
-// Meeting Flow Card - Wide card showing the 5-step process
+// Meeting Flow Card - Wide card showing the 5-step process with animated icons
 const MeetingFlowCard = () => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const prevActiveStep = React.useRef(activeStep);
+
+  // Refs for each icon to control animations programmatically
+  const iconRefs = React.useRef<(AnimatedIconHandle | null)[]>([]);
+
   const steps = [
-    { icon: FlowIcons.review, label: "Review", desc: "Past commitments" },
-    { icon: FlowIcons.progress, label: "Progress", desc: "What's done?" },
     {
-      icon: FlowIcons.interrogate,
+      Icon: FileDescriptionIcon,
+      label: "Review",
+      desc: "Past commitments",
+    },
+    {
+      Icon: CheckedIcon,
+      label: "Progress",
+      desc: "What's done?",
+    },
+    {
+      Icon: QuestionMarkIcon,
       label: "Interrogate",
       desc: "Why not done?",
     },
-    { icon: FlowIcons.patterns, label: "Patterns", desc: "Spot trends" },
-    { icon: FlowIcons.lockin, label: "Lock-in", desc: "New commitments" },
+    {
+      Icon: ChartHistogramIcon,
+      label: "Patterns",
+      desc: "Spot trends",
+    },
+    {
+      Icon: LockIcon,
+      label: "Lock-in",
+      desc: "New commitments",
+    },
   ];
+
+  // Trigger animation when activeStep changes
+  React.useEffect(() => {
+    // Stop animation on previous step
+    if (prevActiveStep.current !== activeStep) {
+      iconRefs.current[prevActiveStep.current]?.stopAnimation();
+    }
+    // Start animation on new active step
+    iconRefs.current[activeStep]?.startAnimation();
+    prevActiveStep.current = activeStep;
+  }, [activeStep]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -831,6 +787,15 @@ const MeetingFlowCard = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, [steps.length]);
+
+  // Handle hover to animate icon only (without changing active step)
+  const handleIconHoverStart = (index: number) => {
+    iconRefs.current[index]?.startAnimation();
+  };
+
+  const handleIconHoverEnd = (index: number) => {
+    iconRefs.current[index]?.stopAnimation();
+  };
 
   return (
     <BentoCard className="h-full">
@@ -852,13 +817,14 @@ const MeetingFlowCard = () => {
         {steps.map((step, i) => (
           <React.Fragment key={i}>
             <motion.div
-              className="flex flex-col items-center flex-1"
+              className="flex flex-col items-center flex-1 cursor-pointer"
               animate={{
                 scale: activeStep === i ? 1.05 : 1,
                 opacity: activeStep === i ? 1 : 0.5,
               }}
               transition={{ duration: 0.3 }}
-              onMouseEnter={() => setActiveStep(i)}
+              onMouseEnter={() => handleIconHoverStart(i)}
+              onMouseLeave={() => handleIconHoverEnd(i)}
             >
               <motion.div
                 className={cn(
@@ -867,10 +833,14 @@ const MeetingFlowCard = () => {
                     ? "bg-foreground text-background shadow-lg"
                     : "bg-secondary text-foreground"
                 )}
-                whileHover={{ scale: 1.1, rotate: 2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                {step.icon}
+                <step.Icon
+                  ref={(el) => {
+                    iconRefs.current[i] = el;
+                  }}
+                  size={20}
+                />
               </motion.div>
               <span className="text-xs font-medium text-foreground">
                 {step.label}
