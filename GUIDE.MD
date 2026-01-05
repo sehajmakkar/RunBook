@@ -603,9 +603,130 @@ npm run db:studio
 
 ---
 
-## TODO 5: Auth Middleware
+## TODO 5: Auth Middleware ✅
 
-_Coming soon_
+### Approach
+
+Create Next.js middleware to protect routes and manage authentication flow. The middleware intercepts requests before they reach the page, checking auth status and redirecting as needed.
+
+### Implementation Strategy
+
+1. Create middleware that checks Supabase session on every request
+2. Define protected routes (require auth) and auth routes (redirect if logged in)
+3. Handle redirects based on authentication state
+4. Create protected layout wrapper for additional server-side auth check
+
+### Route Protection Logic
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     INCOMING REQUEST                            │
+└─────────────────────────────────┬───────────────────────────────┘
+                                  │
+                                  ▼
+                    ┌─────────────────────────┐
+                    │   Check Supabase User   │
+                    └─────────────┬───────────┘
+                                  │
+                    ┌─────────────┴───────────┐
+                    │                         │
+                    ▼                         ▼
+            ┌───────────────┐         ┌───────────────┐
+            │  Logged In    │         │  Not Logged   │
+            └───────┬───────┘         └───────┬───────┘
+                    │                         │
+        ┌───────────┴───────────┐   ┌─────────┴─────────┐
+        │                       │   │                   │
+        ▼                       ▼   ▼                   ▼
+  Protected Route?      Auth Route?  Protected Route?   Auth Route?
+        │                       │         │                 │
+        ▼                       ▼         ▼                 ▼
+      Allow              Redirect to    Redirect to       Allow
+                         /dashboard       /login
+```
+
+### Files Created
+
+| File                                 | Purpose                                 |
+| ------------------------------------ | --------------------------------------- |
+| `middleware.ts`                      | Next.js middleware for route protection |
+| `app/(protected)/layout.tsx`         | Server-side auth check wrapper          |
+| `app/(protected)/dashboard/page.tsx` | Dashboard placeholder page              |
+| `app/(protected)/meeting/page.tsx`   | Meeting "Coming Soon" page              |
+
+### Route Configuration
+
+| Route Type | Routes                                            | Behavior                                  |
+| ---------- | ------------------------------------------------- | ----------------------------------------- |
+| Protected  | `/dashboard`, `/meeting`, `/settings`, `/profile` | Redirect to `/login` if not authenticated |
+| Auth       | `/login`                                          | Redirect to `/dashboard` if authenticated |
+| Public     | `/`, `/auth/callback`, `/terms`, `/privacy`       | Accessible to everyone                    |
+
+### Middleware Configuration
+
+```typescript
+// middleware.ts
+export const config = {
+  matcher: [
+    // Match all routes except static files and images
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
+```
+
+### Usage
+
+#### Protected Layout (Server-Side Check)
+
+```typescript
+// app/(protected)/layout.tsx
+import { requireAuth } from "@/lib/auth";
+
+export default async function ProtectedLayout({ children }) {
+  // Redirects to /login if not authenticated
+  await requireAuth();
+  return <>{children}</>;
+}
+```
+
+#### Client Component Auth Check
+
+```typescript
+"use client";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+
+function useUser() {
+  const [user, setUser] = useState(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+  }, []);
+
+  return user;
+}
+```
+
+### Testing Instructions
+
+```bash
+# Start dev server
+npm run dev
+
+# Test protected route (should redirect to /login)
+open http://localhost:3000/dashboard
+
+# Login, then try /login (should redirect to /dashboard)
+open http://localhost:3000/login
+```
+
+### Security Notes
+
+1. **Middleware runs on Edge** - Fast, but can't access database directly
+2. **Double protection** - Middleware + Layout auth check for defense in depth
+3. **Session refresh** - Middleware client automatically refreshes expired sessions
+4. **Redirect preservation** - Original URL saved in query param for post-login redirect
 
 ---
 
