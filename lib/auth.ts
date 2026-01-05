@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getUser } from "@/lib/supabase/server";
+import { getUser, createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 /**
@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
  */
 export async function getDbUser() {
   const supabaseUser = await getUser();
-  
+
   if (!supabaseUser) {
     return null;
   }
@@ -29,13 +29,28 @@ export async function getDbUser() {
  * Use this in protected pages/components.
  */
 export async function requireAuth() {
-  const user = await getDbUser();
-  
-  if (!user) {
+  const supabaseUser = await getUser();
+
+  if (!supabaseUser) {
     redirect("/login");
   }
 
-  return user;
+  const dbUser = await prisma.user.findUnique({
+    where: { supabaseId: supabaseUser.id },
+    include: {
+      goals: true,
+      meetingSchedule: true,
+    },
+  });
+
+  // If Supabase session exists but user not in database, sign out
+  if (!dbUser) {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+    redirect("/login");
+  }
+
+  return dbUser;
 }
 
 /**
@@ -46,4 +61,3 @@ export async function needsOnboarding() {
   const user = await getDbUser();
   return user ? !user.onboardingDone : false;
 }
-

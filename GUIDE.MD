@@ -730,15 +730,371 @@ open http://localhost:3000/login
 
 ---
 
-## TODO 6: Onboarding Modal
+## TODO 6: Onboarding Modal ✅
 
-_Coming soon_
+### Approach
+
+Build a beautiful, animated modal system for onboarding new users. The modal features a blurred backdrop, step-by-step navigation, and smooth Framer Motion animations that create a pleasing, app-like experience.
+
+### Implementation Strategy
+
+1. Create reusable modal wrapper with backdrop blur
+2. Build progress indicator (dots) for step visualization
+3. Implement slide animations between steps
+4. Create state management for onboarding data
+5. Design render props pattern for flexible step content
+
+### Component Architecture
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                    OnboardingModal                         │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              OnboardingProgress (dots)               │  │
+│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │                                                      │  │
+│  │                  Step Content                        │  │
+│  │              (slides left/right)                     │  │
+│  │                                                      │  │
+│  │    ┌────────────┐    ┌────────────┐                  │  │
+│  │    │   Back     │    │   Next     │                  │  │
+│  │    └────────────┘    └────────────┘                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────┘
+```
+
+### Files Created
+
+| File                                           | Purpose                              |
+| ---------------------------------------------- | ------------------------------------ |
+| `components/onboarding/OnboardingModal.tsx`    | Main modal with state and navigation |
+| `components/onboarding/OnboardingProgress.tsx` | Step indicator dots                  |
+| `components/onboarding/animations.ts`          | Framer Motion variants               |
+| `components/onboarding/index.ts`               | Component exports                    |
+
+### Onboarding Data Structure
+
+```typescript
+interface OnboardingData {
+  name: string; // User's preferred name
+  goals: { title: string; id: string }[]; // Up to 3 daily goals
+  meetingChoice: "try" | "schedule" | null; // Meeting preference
+  scheduledTime: string | null; // Scheduled meeting time
+}
+```
+
+### Animation System
+
+| Animation          | Description                     |
+| ------------------ | ------------------------------- |
+| `backdropVariants` | Fade in/out with blur           |
+| `modalVariants`    | Scale + fade with spring easing |
+| `stepVariants`     | Horizontal slide between steps  |
+| `staggerContainer` | Staggered reveal for lists      |
+| `staggerItem`      | Individual item animation       |
+
+### Usage Example
+
+```typescript
+import { OnboardingModal, OnboardingData } from "@/components/onboarding";
+
+function Dashboard() {
+  const [showOnboarding, setShowOnboarding] = useState(true);
+
+  const handleComplete = async (data: OnboardingData) => {
+    // Save data to database
+    await saveOnboarding(data);
+    setShowOnboarding(false);
+  };
+
+  return (
+    <>
+      <OnboardingModal isOpen={showOnboarding} onComplete={handleComplete}>
+        {(props) => <WelcomeStep {...props} />}
+        {(props) => <GoalsStep {...props} />}
+        {(props) => <MeetingChoiceStep {...props} />}
+      </OnboardingModal>
+
+      {/* Dashboard content */}
+    </>
+  );
+}
+```
+
+### Step Component Props
+
+Each step receives these props:
+
+```typescript
+type OnboardingStepProps = {
+  data: OnboardingData; // Current form data
+  updateData: (updates) => void; // Update data
+  nextStep: () => void; // Go to next step
+  prevStep: () => void; // Go to previous step
+  onComplete: () => void; // Complete onboarding
+  isFirstStep: boolean; // Hide back button
+  isLastStep: boolean; // Show complete button
+};
+```
+
+### Design Features
+
+- **Backdrop blur**: Semi-transparent overlay with `backdrop-blur-md`
+- **Rounded modal**: `rounded-3xl` for modern feel
+- **Progress dots**: Animated color and scale changes
+- **Slide transitions**: Content slides horizontally between steps
+- **Custom easing**: `[0.16, 1, 0.3, 1]` for smooth, natural motion
 
 ---
 
-## TODO 7: Onboarding Steps
+## TODO 7: Onboarding Steps ✅
 
-_Coming soon_
+### Approach
+
+Build a three-step onboarding flow with smooth animations that captures user name, daily goals, and meeting preferences. The implementation includes a beautiful scrollable time picker inspired by mobile alarm apps, full dark/light mode support, and uses only the website's theme colors.
+
+### Implementation Strategy
+
+1. Create WelcomeStep with name input and auto-focus
+2. Create GoalsStep allowing users to add up to 3 daily goals with animated list
+3. Create MeetingChoiceStep with two options: Try Meeting Now or Schedule Daily
+4. Build TimePickerModal with scroll-wheel interface for time selection
+5. Integrate with API routes for persisting onboarding data
+6. Check `onboardingDone` flag to conditionally show modal
+
+### Onboarding Flow
+
+```
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│   Step 1         │     │   Step 2         │     │   Step 3         │
+│   Welcome        │────▶│   Set Goals      │────▶│   Meeting Choice │
+│   (Name Input)   │     │   (Up to 3)      │     │                  │
+└──────────────────┘     └──────────────────┘     └────────┬─────────┘
+                                                           │
+                                          ┌────────────────┼────────────────┐
+                                          │                │                │
+                                          ▼                ▼                │
+                                   ┌────────────┐   ┌────────────┐         │
+                                   │ Try Meeting│   │  Schedule  │         │
+                                   │    Now     │   │   Daily    │         │
+                                   └─────┬──────┘   └─────┬──────┘         │
+                                         │                │                │
+                                         │                ▼                │
+                                         │         ┌────────────┐         │
+                                         │         │Time Picker │         │
+                                         │         │   Modal    │         │
+                                         │         └─────┬──────┘         │
+                                         │               │                │
+                                         ▼               ▼                │
+                                   ┌──────────────────────────────────────┘
+                                   │           Dashboard
+                                   └──────────────────────────────────────
+```
+
+### Files Created
+
+| File                                                | Purpose                                 |
+| --------------------------------------------------- | --------------------------------------- |
+| `components/onboarding/steps/WelcomeStep.tsx`       | Name input with greeting                |
+| `components/onboarding/steps/GoalsStep.tsx`         | Add/remove up to 3 goals                |
+| `components/onboarding/steps/MeetingChoiceStep.tsx` | Try now or schedule option              |
+| `components/onboarding/TimePickerModal.tsx`         | Scrollable time picker like alarm app   |
+| `components/onboarding/steps/index.ts`              | Step exports                            |
+| `app/api/profile/route.ts`                          | GET/PATCH user profile                  |
+| `app/api/goals/route.ts`                            | GET/POST goals (batch create supported) |
+| `app/api/goals/[id]/route.ts`                       | GET/PATCH/DELETE individual goal        |
+| `app/api/meeting-schedule/route.ts`                 | CRUD for meeting schedule               |
+
+### Component Details
+
+#### WelcomeStep
+
+- Auto-focuses input after animation
+- Enter key submits
+- Skip option sets name to "Friend"
+- Animated underline on focus
+
+#### GoalsStep
+
+- Maximum 3 goals with visual indicator dots
+- Animated list with stagger effects
+- Goals can be removed with animated exit
+- Numbered badges for each goal
+
+#### MeetingChoiceStep
+
+- Two card options with selection state
+- Checkmark animation on selection
+- Opens TimePickerModal for scheduling
+
+#### TimePickerModal
+
+- Scroll-wheel interface (Hours, Minutes, AM/PM)
+- Snap scrolling for precise selection
+- Gradient fade at top/bottom edges
+- Hidden scrollbars for clean UI
+- 5-minute intervals for minutes
+- Real-time display of selected time
+
+### Animation Details
+
+| Animation            | Description                             |
+| -------------------- | --------------------------------------- |
+| `staggerContainer`   | Parent container for staggered children |
+| `staggerItem`        | Individual items with fade + slide up   |
+| `inputFocusVariants` | Focus ring animation for inputs         |
+| `cardSelectVariants` | Scale + lift on card selection          |
+| `fadeInUp`           | Standard fade in with upward motion     |
+| `scaleIn`            | Scale from 0.8 to 1 with fade           |
+| `scrollSnapVariants` | Active/inactive states for time picker  |
+
+### API Routes
+
+#### Profile API (`/api/profile`)
+
+| Method | Purpose                                    |
+| ------ | ------------------------------------------ |
+| GET    | Fetch current user with goals and schedule |
+| PATCH  | Update name, avatarUrl, or onboardingDone  |
+
+#### Goals API (`/api/goals`)
+
+| Method | Purpose                                |
+| ------ | -------------------------------------- |
+| GET    | Fetch all goals (optional type filter) |
+| POST   | Create single goal or batch create     |
+
+**Batch Create Example (for onboarding):**
+
+```json
+POST /api/goals
+{
+  "goals": [
+    { "title": "Exercise for 30 minutes" },
+    { "title": "Read 20 pages" },
+    { "title": "Meditate" }
+  ]
+}
+```
+
+#### Meeting Schedule API (`/api/meeting-schedule`)
+
+| Method | Purpose                       |
+| ------ | ----------------------------- |
+| GET    | Fetch user's meeting schedule |
+| POST   | Create or update schedule     |
+| PATCH  | Update schedule properties    |
+| DELETE | Remove schedule               |
+
+### Theme Compliance
+
+All components use the website's theme colors:
+
+- Primary accent: `#156d95` (teal/blue)
+- Gradient: `from-[#156d95] to-[#1a7faa]`
+- Background: Uses CSS variables (`bg-zinc-*`, `dark:bg-zinc-*`)
+- Font: Figtree for all text
+
+### CSS Additions
+
+Added to `globals.css`:
+
+```css
+/* Hide scrollbar utility for time picker */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+```
+
+### Dashboard Integration
+
+The dashboard page now:
+
+1. Fetches user profile on mount
+2. Checks `onboardingDone` flag
+3. Shows OnboardingModal if `onboardingDone === false`
+4. Saves all onboarding data via API calls on completion
+5. Redirects to `/meeting` if user chose "Try Meeting Now"
+
+### Testing Instructions
+
+#### 1. Start Development Server
+
+```bash
+npm run dev
+```
+
+#### 2. Test Onboarding Flow
+
+1. Sign in with Google (creates new user with `onboardingDone: false`)
+2. Onboarding modal should appear automatically
+3. **Step 1**: Enter name or skip
+4. **Step 2**: Add 1-3 goals, test adding/removing
+5. **Step 3**: Choose either option:
+   - "Try Meeting Now" → Completes and redirects to `/meeting`
+   - "Schedule Daily" → Opens time picker
+
+#### 3. Test Time Picker
+
+1. Scroll through hours, minutes, and AM/PM
+2. Click values to snap to them
+3. Verify display updates in real-time
+4. Confirm time selection
+
+#### 4. Verify Data Persistence
+
+```bash
+# Open Prisma Studio
+npm run db:studio
+```
+
+Check:
+
+- `users` table: `name` updated, `onboardingDone: true`
+- `goals` table: Goals created with correct user ID
+- `meeting_schedules` table: Schedule created if scheduled
+
+#### 5. Test Dark Mode
+
+1. Toggle system dark mode or use browser dev tools
+2. Verify all components render correctly
+3. Check contrast and readability
+
+#### 6. Test API Routes
+
+```bash
+# Get profile
+curl http://localhost:3000/api/profile
+
+# Update profile
+curl -X PATCH http://localhost:3000/api/profile \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Test User"}'
+
+# Get goals
+curl http://localhost:3000/api/goals
+
+# Create meeting schedule
+curl -X POST http://localhost:3000/api/meeting-schedule \
+  -H "Content-Type: application/json" \
+  -d '{"time": "09:00", "timezone": "America/New_York"}'
+```
+
+### Troubleshooting
+
+| Issue                     | Solution                                              |
+| ------------------------- | ----------------------------------------------------- |
+| Onboarding not showing    | Check `onboardingDone` in database, should be `false` |
+| API returns 401           | Ensure user is authenticated, check cookies           |
+| Time picker not scrolling | Verify `hide-scrollbar` CSS is loaded                 |
+| Goals not saving          | Check API response, verify Prisma connection          |
+| Modal not animating       | Ensure Framer Motion is installed                     |
 
 ---
 
