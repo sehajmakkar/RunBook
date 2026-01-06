@@ -84,23 +84,24 @@ export function Sidebar({ user, isCollapsed, onToggle }: SidebarProps) {
               transition={{ duration: 0.2 }}
               className="flex items-center gap-2"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#156d95] to-[#1a7faa] flex items-center justify-center">
-                <span className="text-white font-bold text-sm">R</span>
-              </div>
-              <span
-                className="font-bold text-lg text-sidebar-foreground"
+              <button
+                onClick={() => router.push("/")}
+                className="font-bold text-lg text-sidebar-foreground hover:text-[#156d95] transition-colors"
                 style={{ fontFamily: "Figtree, sans-serif" }}
               >
                 RUNBOOK
-              </span>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
 
         {isCollapsed && (
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#156d95] to-[#1a7faa] flex items-center justify-center mx-auto">
+          <button
+            onClick={() => router.push("/")}
+            className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#156d95] to-[#1a7faa] flex items-center justify-center mx-auto hover:opacity-90 transition-opacity"
+          >
             <span className="text-white font-bold text-sm">R</span>
-          </div>
+          </button>
         )}
 
         <motion.button

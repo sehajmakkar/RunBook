@@ -457,33 +457,33 @@ export function MeetingBanner({ schedule, onReschedule }: MeetingBannerProps) {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
             {/* Countdown Box */}
             <div
-              className={`flex-1 sm:flex-initial text-center px-6 py-1 rounded-xl backdrop-blur-sm ${
+              className={`flex items-center justify-center gap-2 px-5 py-3 rounded-xl backdrop-blur-sm ${
                 isMeetingTime
                   ? "bg-white/10 border border-white/20"
                   : "bg-[#156d95]/10 border border-[#156d95]/20 dark:bg-white/10 dark:border-white/20"
               }`}
             >
-              <p
-                className={`text-xs uppercase tracking-wider ${
+              <span
+                className={`text-sm font-medium leading-none ${
                   isMeetingTime
                     ? "text-[#a8d4e8]"
                     : "text-[#156d95]/60 dark:text-[#a8d4e8]"
                 }`}
               >
-                Countdown
-              </p>
-              <motion.p
+                In:
+              </span>
+              <motion.span
                 key={countdown}
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`text-xl font-bold font-mono ${
+                className={`text-sm font-bold font-mono leading-none ${
                   isMeetingTime
                     ? "text-white"
                     : "text-[#156d95] dark:text-white"
                 }`}
               >
                 {countdown || "..."}
-              </motion.p>
+              </motion.span>
             </div>
 
             {/* Action Buttons */}

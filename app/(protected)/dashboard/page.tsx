@@ -500,6 +500,7 @@ export default function DashboardPage() {
         }}
         onSubmit={handleSubmitGoal}
         editingGoal={editingGoal}
+        defaultType={selectedType}
       />
 
       {/* Onboarding Modal */}

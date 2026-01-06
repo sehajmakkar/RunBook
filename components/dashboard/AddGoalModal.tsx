@@ -17,6 +17,7 @@ interface AddGoalModalProps {
   onClose: () => void;
   onSubmit: (goal: GoalInput) => void;
   editingGoal?: Goal | null;
+  defaultType?: GoalType;
 }
 
 const goalTypes: { value: GoalType; label: string }[] = [
@@ -37,6 +38,7 @@ export function AddGoalModal({
   onClose,
   onSubmit,
   editingGoal,
+  defaultType = "DAILY",
 }: AddGoalModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<GoalInput>({
@@ -61,7 +63,7 @@ export function AddGoalModal({
         setFormData({
           title: "",
           description: "",
-          type: "DAILY",
+          type: defaultType,
           priority: "DEFAULT",
         });
       }
@@ -72,7 +74,7 @@ export function AddGoalModal({
         inputRef.current?.focus();
       }, 100);
     }
-  }, [isOpen, editingGoal]);
+  }, [isOpen, editingGoal, defaultType]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
