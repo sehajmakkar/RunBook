@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Transition } from "framer-motion";
 import {
   MoreHorizontal,
   Pencil,
@@ -146,6 +146,20 @@ function formatDate(dateString: string): string {
   });
 }
 
+// Animated strikethrough helpers
+const getStrikeAnimate = (isChecked: boolean) => ({
+  pathLength: isChecked ? 1 : 0,
+  opacity: isChecked ? 1 : 0,
+});
+
+const getStrikeTransition = (isChecked: boolean): Transition => ({
+  pathLength: { duration: 0.8, ease: "easeInOut" },
+  opacity: {
+    duration: 0.01,
+    delay: isChecked ? 0 : 0.8,
+  },
+});
+
 // Table Row Component
 function TableRow({
   goal,
@@ -173,7 +187,7 @@ function TableRow({
       className="group border-b border-border/50 hover:bg-muted/30 transition-colors"
     >
       {/* Checkbox */}
-      <td className="py-4 px-4">
+      <td className="py-4 px-4 align-middle">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -205,17 +219,40 @@ function TableRow({
       </td>
 
       {/* Task Title */}
-      <td className="py-4 px-4">
-        <span
-          className={`font-medium truncate block ${
-            goal.status === "COMPLETED"
-              ? "line-through text-muted-foreground"
-              : "text-foreground"
-          }`}
-          title={goal.title}
-        >
-          {goal.title}
-        </span>
+      <td className="py-4 px-4 align-middle">
+        <div className="relative inline-flex items-center max-w-full">
+          <span
+            className={`font-medium truncate transition-colors duration-300 ${
+              goal.status === "COMPLETED"
+                ? "text-muted-foreground"
+                : "text-foreground"
+            }`}
+            title={goal.title}
+          >
+            {goal.title}
+          </span>
+          {/* Animated Strikethrough SVG */}
+          <motion.svg
+            width="100%"
+            height="32"
+            viewBox="0 0 340 32"
+            preserveAspectRatio="none"
+            className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none z-20 w-full h-8"
+          >
+            <motion.path
+              d="M 10 16.91 s 79.8 -11.36 98.1 -11.34 c 22.2 0.02 -47.82 14.25 -33.39 22.02 c 12.61 6.77 124.18 -27.98 133.31 -17.28 c 7.52 8.38 -26.8 20.02 4.61 22.05 c 24.55 1.93 113.37 -20.36 113.37 -20.36"
+              vectorEffect="non-scaling-stroke"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeMiterlimit={10}
+              fill="none"
+              initial={false}
+              animate={getStrikeAnimate(goal.status === "COMPLETED")}
+              transition={getStrikeTransition(goal.status === "COMPLETED")}
+              className="stroke-[#156d95] dark:stroke-[#5bb4db]"
+            />
+          </motion.svg>
+        </div>
       </td>
 
       {/* Description */}
