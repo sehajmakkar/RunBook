@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/lib/supabase/server";
-import { GoalType, Priority } from "@prisma/client";
+import { GoalType, Priority, CommitmentStatus } from "@prisma/client";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -85,7 +85,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { title, description, type, priority, completed, order } = body;
+    const { title, description, type, priority, status, order } = body;
 
     // Build update data
     const updateData: {
@@ -93,7 +93,8 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       description?: string | null;
       type?: GoalType;
       priority?: Priority;
-      completed?: boolean;
+      status?: CommitmentStatus;
+      completedAt?: Date | null;
       order?: number;
     } = {};
 
@@ -101,7 +102,15 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     if (description !== undefined) updateData.description = description;
     if (type !== undefined) updateData.type = type;
     if (priority !== undefined) updateData.priority = priority;
-    if (completed !== undefined) updateData.completed = completed;
+    if (status !== undefined) {
+      updateData.status = status;
+      // Set completedAt when status changes to COMPLETED, clear it otherwise
+      if (status === CommitmentStatus.COMPLETED) {
+        updateData.completedAt = new Date();
+      } else {
+        updateData.completedAt = null;
+      }
+    }
     if (order !== undefined) updateData.order = order;
 
     const goal = await prisma.goal.update({

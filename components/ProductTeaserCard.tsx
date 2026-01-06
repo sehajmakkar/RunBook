@@ -195,7 +195,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
               </p>
             </div>
 
-            <ul className="flex flex-col sm:flex-row gap-2 sm:gap-1.5 flex-wrap mt-6 sm:mt-8 md:mt-10">
+            <ul className="flex flex-col sm:flex-row gap-2 sm:gap-1.5 flex-wrap mt-6 sm:mt-8 md:mt-8">
               <li className="w-full sm:w-auto">
                 <a
                   href={primaryButtonHref}

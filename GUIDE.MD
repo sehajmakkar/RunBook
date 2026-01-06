@@ -1098,9 +1098,174 @@ curl -X POST http://localhost:3000/api/meeting-schedule \
 
 ---
 
-## TODO 8: Goals API
+## TODO 8: Goals API ✅
 
-_Coming soon_
+### Approach
+
+Create comprehensive REST API routes for goals CRUD operations with proper authentication, authorization, and error handling. The API supports both individual goal operations and batch creation (for onboarding).
+
+### Implementation Strategy
+
+1. Create `/api/goals` route for listing all goals and creating new ones
+2. Create `/api/goals/[id]` route for individual goal operations (GET, PATCH, DELETE)
+3. Implement authentication checks using Supabase session
+4. Add ownership verification to prevent unauthorized access
+5. Support filtering by goal type (DAILY, WEEKLY, MONTHLY)
+6. Handle ordering for drag-and-drop reordering support
+
+### Files Created
+
+| File                          | Purpose                                  |
+| ----------------------------- | ---------------------------------------- |
+| `app/api/goals/route.ts`      | List goals (GET) and create goals (POST) |
+| `app/api/goals/[id]/route.ts` | Get, update, delete individual goals     |
+
+### API Endpoints
+
+#### GET /api/goals
+
+Fetch all goals for the authenticated user.
+
+**Query Parameters:**
+
+- `type` (optional): Filter by goal type (`DAILY`, `WEEKLY`, `MONTHLY`)
+
+**Response:**
+
+```json
+[
+  {
+    "id": "clx...",
+    "title": "Exercise for 30 minutes",
+    "description": null,
+    "type": "DAILY",
+    "priority": "DEFAULT",
+    "completed": false,
+    "order": 0,
+    "userId": "clx...",
+    "createdAt": "2026-01-06T...",
+    "updatedAt": "2026-01-06T..."
+  }
+]
+```
+
+#### POST /api/goals
+
+Create a new goal or batch create goals.
+
+**Single Goal Request:**
+
+```json
+{
+  "title": "Read for 20 minutes",
+  "description": "Optional description",
+  "type": "DAILY",
+  "priority": "HIGH"
+}
+```
+
+**Batch Create Request (for onboarding):**
+
+```json
+{
+  "goals": [{ "title": "Goal 1" }, { "title": "Goal 2" }, { "title": "Goal 3" }]
+}
+```
+
+**Response:** Created goal(s) with status 201
+
+#### GET /api/goals/[id]
+
+Fetch a specific goal by ID.
+
+**Response:** Single goal object or 404 if not found
+
+#### PATCH /api/goals/[id]
+
+Update a specific goal.
+
+**Request Body (all fields optional):**
+
+```json
+{
+  "title": "Updated title",
+  "description": "Updated description",
+  "type": "WEEKLY",
+  "priority": "URGENT",
+  "completed": true,
+  "order": 2
+}
+```
+
+**Response:** Updated goal object
+
+#### DELETE /api/goals/[id]
+
+Delete a specific goal.
+
+**Response:**
+
+```json
+{ "success": true }
+```
+
+### Authentication & Authorization
+
+All endpoints:
+
+1. Verify Supabase session exists
+2. Look up user by `supabaseId`
+3. For individual goal operations, verify the goal belongs to the user
+
+### Error Responses
+
+| Status | Error                 | Description              |
+| ------ | --------------------- | ------------------------ |
+| 401    | Unauthorized          | No valid session         |
+| 404    | User not found        | User doesn't exist in DB |
+| 404    | Goal not found        | Goal doesn't exist       |
+| 400    | Title is required     | Missing required field   |
+| 500    | Internal server error | Unexpected error         |
+
+### Testing Instructions
+
+#### Test with curl (after authentication)
+
+```bash
+# Get all goals
+curl http://localhost:3000/api/goals
+
+# Get daily goals only
+curl "http://localhost:3000/api/goals?type=DAILY"
+
+# Create a goal
+curl -X POST http://localhost:3000/api/goals \
+  -H "Content-Type: application/json" \
+  -d '{"title": "New Goal", "priority": "HIGH"}'
+
+# Update a goal
+curl -X PATCH http://localhost:3000/api/goals/[id] \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
+
+# Delete a goal
+curl -X DELETE http://localhost:3000/api/goals/[id]
+```
+
+#### Test via Browser DevTools
+
+1. Login to the app
+2. Open DevTools → Network tab
+3. Navigate to dashboard (triggers goals fetch)
+4. Verify GET /api/goals returns 200
+5. Complete onboarding with goals to test POST
+
+### Implementation Notes
+
+- Goals are ordered by the `order` field for drag-and-drop support
+- Batch creation automatically assigns incrementing order values
+- All mutations update the `updatedAt` timestamp automatically (Prisma)
+- Cascading deletes ensure goals are removed when user is deleted
 
 ---
 
