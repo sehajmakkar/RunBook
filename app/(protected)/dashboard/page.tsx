@@ -134,17 +134,35 @@ export default function DashboardPage() {
     }
   }, [loading, user]);
 
-  // Filter goals by type
+  // Filter goals by type (sorted by newest first)
   const dailyGoals = useMemo(
-    () => goals.filter((g) => g.type === "DAILY"),
+    () =>
+      goals
+        .filter((g) => g.type === "DAILY")
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
     [goals]
   );
   const weeklyGoals = useMemo(
-    () => goals.filter((g) => g.type === "WEEKLY"),
+    () =>
+      goals
+        .filter((g) => g.type === "WEEKLY")
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
     [goals]
   );
   const monthlyGoals = useMemo(
-    () => goals.filter((g) => g.type === "MONTHLY"),
+    () =>
+      goals
+        .filter((g) => g.type === "MONTHLY")
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
     [goals]
   );
 

@@ -428,7 +428,7 @@ export function MeetingBanner({ schedule, onReschedule }: MeetingBannerProps) {
                       : "text-[#0c3d52] dark:text-white"
                   }`}
                 >
-                  {isMeetingTime ? "Your Check-in Awaits!" : "Next AI Check-in"}
+                  {isMeetingTime ? "Your Check-in Awaits!" : "Next Check-in"}
                 </h3>
                 {isMeetingTime && (
                   <motion.span

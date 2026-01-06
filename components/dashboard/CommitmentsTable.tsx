@@ -15,6 +15,16 @@ import {
   Dumbbell,
   Code,
   Sparkles,
+  ShoppingCart,
+  Heart,
+  Home,
+  DollarSign,
+  Users,
+  Plane,
+  Music,
+  Utensils,
+  Pill,
+  GraduationCap,
 } from "lucide-react";
 
 // Types
@@ -101,38 +111,204 @@ function inferCategory(title: string): {
 } {
   const lowercaseTitle = title.toLowerCase();
 
+  // Work & Career
   if (
     lowercaseTitle.includes("work") ||
     lowercaseTitle.includes("meeting") ||
-    lowercaseTitle.includes("project")
+    lowercaseTitle.includes("project") ||
+    lowercaseTitle.includes("deadline") ||
+    lowercaseTitle.includes("presentation") ||
+    lowercaseTitle.includes("report") ||
+    lowercaseTitle.includes("client") ||
+    lowercaseTitle.includes("office")
   ) {
     return { icon: Briefcase, label: "Work" };
   }
+
+  // Learning & Education
   if (
     lowercaseTitle.includes("learn") ||
     lowercaseTitle.includes("study") ||
     lowercaseTitle.includes("read") ||
-    lowercaseTitle.includes("book")
+    lowercaseTitle.includes("book") ||
+    lowercaseTitle.includes("course") ||
+    lowercaseTitle.includes("class") ||
+    lowercaseTitle.includes("tutorial") ||
+    lowercaseTitle.includes("practice")
   ) {
-    return { icon: BookOpen, label: "Learning" };
+    return { icon: GraduationCap, label: "Learning" };
   }
+
+  // Fitness & Exercise
   if (
     lowercaseTitle.includes("gym") ||
     lowercaseTitle.includes("exercise") ||
     lowercaseTitle.includes("workout") ||
     lowercaseTitle.includes("run") ||
-    lowercaseTitle.includes("fitness")
+    lowercaseTitle.includes("fitness") ||
+    lowercaseTitle.includes("yoga") ||
+    lowercaseTitle.includes("walk") ||
+    lowercaseTitle.includes("swim") ||
+    lowercaseTitle.includes("stretch")
   ) {
     return { icon: Dumbbell, label: "Fitness" };
   }
+
+  // Coding & Tech
   if (
     lowercaseTitle.includes("code") ||
     lowercaseTitle.includes("build") ||
     lowercaseTitle.includes("develop") ||
-    lowercaseTitle.includes("programming")
+    lowercaseTitle.includes("programming") ||
+    lowercaseTitle.includes("debug") ||
+    lowercaseTitle.includes("deploy") ||
+    lowercaseTitle.includes("api") ||
+    lowercaseTitle.includes("app") ||
+    lowercaseTitle.includes("frontend") ||
+    lowercaseTitle.includes("backend") ||
+    lowercaseTitle.includes("database") ||
+    lowercaseTitle.includes("server") ||
+    lowercaseTitle.includes("feature") ||
+    lowercaseTitle.includes("bug") ||
+    lowercaseTitle.includes("fix") ||
+    lowercaseTitle.includes("refactor") ||
+    lowercaseTitle.includes("test") ||
+    lowercaseTitle.includes("commit") ||
+    lowercaseTitle.includes("push") ||
+    lowercaseTitle.includes("pull request") ||
+    lowercaseTitle.includes("merge") ||
+    lowercaseTitle.includes("review") ||
+    lowercaseTitle.includes("component") ||
+    lowercaseTitle.includes("function") ||
+    lowercaseTitle.includes("module") ||
+    lowercaseTitle.includes("script") ||
+    lowercaseTitle.includes("css") ||
+    lowercaseTitle.includes("html") ||
+    lowercaseTitle.includes("react") ||
+    lowercaseTitle.includes("next") ||
+    lowercaseTitle.includes("node") ||
+    lowercaseTitle.includes("python") ||
+    lowercaseTitle.includes("java") ||
+    lowercaseTitle.includes("docker") ||
+    lowercaseTitle.includes("kubernetes") ||
+    lowercaseTitle.includes("aws") ||
+    lowercaseTitle.includes("azure") ||
+    lowercaseTitle.includes("git") ||
+    lowercaseTitle.includes("repo") ||
+    lowercaseTitle.includes("ci/cd") ||
+    lowercaseTitle.includes("pipeline") ||
+    lowercaseTitle.includes("endpoint") ||
+    lowercaseTitle.includes("schema") ||
+    lowercaseTitle.includes("migration") ||
+    lowercaseTitle.includes("implement") ||
+    lowercaseTitle.includes("integrate") ||
+    lowercaseTitle.includes("optimize") ||
+    lowercaseTitle.includes("authentication") ||
+    lowercaseTitle.includes("auth")
   ) {
     return { icon: Code, label: "Coding" };
   }
+
+  // Shopping & Errands
+  if (
+    lowercaseTitle.includes("buy") ||
+    lowercaseTitle.includes("shop") ||
+    lowercaseTitle.includes("grocery") ||
+    lowercaseTitle.includes("order") ||
+    lowercaseTitle.includes("pick up") ||
+    lowercaseTitle.includes("return")
+  ) {
+    return { icon: ShoppingCart, label: "Shopping" };
+  }
+
+  // Health & Wellness
+  if (
+    lowercaseTitle.includes("doctor") ||
+    lowercaseTitle.includes("dentist") ||
+    lowercaseTitle.includes("medicine") ||
+    lowercaseTitle.includes("health") ||
+    lowercaseTitle.includes("appointment") ||
+    lowercaseTitle.includes("checkup") ||
+    lowercaseTitle.includes("meditate")
+  ) {
+    return { icon: Pill, label: "Health" };
+  }
+
+  // Home & Chores
+  if (
+    lowercaseTitle.includes("clean") ||
+    lowercaseTitle.includes("laundry") ||
+    lowercaseTitle.includes("cook") ||
+    lowercaseTitle.includes("house") ||
+    lowercaseTitle.includes("repair") ||
+    lowercaseTitle.includes("organize") ||
+    lowercaseTitle.includes("dishes")
+  ) {
+    return { icon: Home, label: "Home" };
+  }
+
+  // Finance
+  if (
+    lowercaseTitle.includes("pay") ||
+    lowercaseTitle.includes("bill") ||
+    lowercaseTitle.includes("budget") ||
+    lowercaseTitle.includes("invest") ||
+    lowercaseTitle.includes("bank") ||
+    lowercaseTitle.includes("tax") ||
+    lowercaseTitle.includes("money")
+  ) {
+    return { icon: DollarSign, label: "Finance" };
+  }
+
+  // Social & Family
+  if (
+    lowercaseTitle.includes("call") ||
+    lowercaseTitle.includes("visit") ||
+    lowercaseTitle.includes("friend") ||
+    lowercaseTitle.includes("family") ||
+    lowercaseTitle.includes("party") ||
+    lowercaseTitle.includes("dinner") ||
+    lowercaseTitle.includes("birthday")
+  ) {
+    return { icon: Users, label: "Social" };
+  }
+
+  // Travel
+  if (
+    lowercaseTitle.includes("travel") ||
+    lowercaseTitle.includes("trip") ||
+    lowercaseTitle.includes("flight") ||
+    lowercaseTitle.includes("hotel") ||
+    lowercaseTitle.includes("vacation") ||
+    lowercaseTitle.includes("pack")
+  ) {
+    return { icon: Plane, label: "Travel" };
+  }
+
+  // Hobbies & Creative
+  if (
+    lowercaseTitle.includes("music") ||
+    lowercaseTitle.includes("paint") ||
+    lowercaseTitle.includes("draw") ||
+    lowercaseTitle.includes("write") ||
+    lowercaseTitle.includes("play") ||
+    lowercaseTitle.includes("hobby") ||
+    lowercaseTitle.includes("game")
+  ) {
+    return { icon: Music, label: "Hobby" };
+  }
+
+  // Self-care & Relationships
+  if (
+    lowercaseTitle.includes("self") ||
+    lowercaseTitle.includes("relax") ||
+    lowercaseTitle.includes("journal") ||
+    lowercaseTitle.includes("gratitude") ||
+    lowercaseTitle.includes("date")
+  ) {
+    return { icon: Heart, label: "Self-care" };
+  }
+
   return { icon: Sparkles, label: "Personal" };
 }
 
