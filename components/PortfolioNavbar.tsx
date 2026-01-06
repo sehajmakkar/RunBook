@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import {
+  Menu,
+  X,
+  User,
+  LayoutDashboard,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // Animated Theme Toggle Button
 // Light mode: shows MOON (white bg, black icon) - click to switch to dark
@@ -27,7 +37,9 @@ const AnimatedThemeToggle = ({
       type="button"
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
-        isDark ? "bg-background text-foreground" : "bg-background text-foreground",
+        isDark
+          ? "bg-background text-foreground"
+          : "bg-background text-foreground",
         className
       )}
       onClick={onToggle}
@@ -101,7 +113,62 @@ const navigationLinks = [
 export const PortfolioNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  // Fetch user session
+  useEffect(() => {
+    const supabase = createClient();
+
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        // Fetch profile for avatar
+        try {
+          const response = await fetch("/api/profile");
+          if (response.ok) {
+            const profile = await response.json();
+            setAvatarUrl(profile.avatarUrl);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        }
+      }
+    };
+
+    getUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -123,6 +190,19 @@ export const PortfolioNavbar = () => {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    setShowUserMenu(false);
+    router.push("/");
+    router.refresh();
+  };
+
+  const handleStartFreeTrial = () => {
+    router.push("/login");
   };
 
   // @return
@@ -180,22 +260,93 @@ export const PortfolioNavbar = () => {
               onToggle={toggleTheme}
               className="size-10 p-2"
             />
-            <button
-              onClick={() => handleLinkClick("#pricing")}
-              className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
-              style={{
-                fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}
-            >
-              <span
+            {user ? (
+              /* User Avatar Dropdown */
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center gap-2 p-1.5 rounded-full hover:bg-muted transition-colors"
+                >
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt="User avatar"
+                      className="w-9 h-9 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-[#156d95] flex items-center justify-center text-white">
+                      <User className="w-5 h-5" />
+                    </div>
+                  )}
+                  <ChevronDown
+                    className={`w-4 h-4 text-muted-foreground transition-transform ${
+                      showUserMenu ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {showUserMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-xl shadow-lg overflow-hidden z-50"
+                    >
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            router.push("/dashboard");
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Dashboard
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            router.push("/profile");
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Profile
+                        </button>
+                        <div className="border-t border-border my-1" />
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Sign Out
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              /* Start Free Trial Button */
+              <button
+                onClick={handleStartFreeTrial}
+                className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
                 style={{
-                  fontFamily: "Figtree",
-                  fontWeight: "500",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
                 }}
               >
-                Start Free Trial
-              </span>
-            </button>
+                <span
+                  style={{
+                    fontFamily: "Figtree",
+                    fontWeight: "500",
+                  }}
+                >
+                  Start Free Trial
+                </span>
+              </button>
+            )}
           </div>
 
           <div className="md:hidden flex items-center gap-2">
@@ -251,15 +402,70 @@ export const PortfolioNavbar = () => {
                 </button>
               ))}
               <div className="pt-4 border-t border-border">
-                <button
-                  onClick={() => handleLinkClick("#pricing")}
-                  className="w-full bg-[#156d95] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200"
-                  style={{
-                    fontFamily: "Plus Jakarta Sans, sans-serif",
-                  }}
-                >
-                  <span>Start Free Trial</span>
-                </button>
+                {user ? (
+                  /* User menu items for mobile */
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 py-2 mb-3">
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt="User avatar"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-[#156d95]"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-[#156d95] flex items-center justify-center text-white">
+                          <User className="w-5 h-5" />
+                        </div>
+                      )}
+                      <span className="text-foreground font-medium">
+                        {user.email}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        closeMobileMenu();
+                        router.push("/dashboard");
+                      }}
+                      className="w-full flex items-center gap-3 py-3 text-foreground hover:text-primary transition-colors"
+                    >
+                      <LayoutDashboard className="w-5 h-5" />
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        closeMobileMenu();
+                        router.push("/profile");
+                      }}
+                      className="w-full flex items-center gap-3 py-3 text-foreground hover:text-primary transition-colors"
+                    >
+                      <User className="w-5 h-5" />
+                      Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        closeMobileMenu();
+                        handleSignOut();
+                      }}
+                      className="w-full flex items-center gap-3 py-3 text-red-500 hover:text-red-600 transition-colors"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      closeMobileMenu();
+                      handleStartFreeTrial();
+                    }}
+                    className="w-full bg-[#156d95] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200"
+                    style={{
+                      fontFamily: "Plus Jakarta Sans, sans-serif",
+                    }}
+                  >
+                    <span>Start Free Trial</span>
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>

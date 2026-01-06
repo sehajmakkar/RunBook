@@ -1,0 +1,88 @@
+// ===========================================
+// RunBook - Prisma Schema
+// ===========================================
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===========================================
+// Models
+// ===========================================
+
+model User {
+  id             String   @id @default(cuid())
+  supabaseId     String   @unique
+  email          String   @unique
+  name           String?
+  avatarUrl      String?
+  onboardingDone Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  goals           Goal[]
+  meetingSchedule MeetingSchedule?
+
+  @@map("users")
+}
+
+model Goal {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  type        GoalType         @default(DAILY)
+  priority    Priority         @default(DEFAULT)
+  status      CommitmentStatus @default(ACTIVE)
+  completedAt DateTime?
+  order       Int              @default(0)
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([userId])
+  @@map("goals")
+}
+
+model MeetingSchedule {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  time      String // e.g., "09:00" in 24-hour format
+  timezone  String   @default("UTC")
+  frequency String   @default("daily") // daily, weekly
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("meeting_schedules")
+}
+
+// ===========================================
+// Enums
+// ===========================================
+
+enum GoalType {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum Priority {
+  DEFAULT
+  LOW
+  HIGH
+  URGENT
+}
+
+enum CommitmentStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}

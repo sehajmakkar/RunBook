@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 type StatItem = {
   value: string;
   description: string;
@@ -66,6 +67,8 @@ export const BankingScaleHero = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [dataPoints] = useState<DataPoint[]>(generateDataPoints());
   const [typingComplete, setTypingComplete] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
     setIsVisible(true);
     const timer = setTimeout(() => setTypingComplete(true), 1000);
@@ -157,7 +160,10 @@ export const BankingScaleHero = () => {
               accountability.
             </p>
 
-            <button className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-foreground bg-secondary/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] dark:shadow-[0_1px_1px_0_rgba(0,0,0,0),0_0_0_1px_rgba(168,170,180,0.2)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)] dark:hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.2),0_0_0_1px_rgba(168,170,180,0.3)]">
+            <button
+              onClick={() => router.push("/login")}
+              className="relative inline-flex justify-center items-center leading-4 text-center cursor-pointer whitespace-nowrap outline-none font-medium h-9 text-foreground bg-secondary/50 backdrop-blur-sm shadow-[0_1px_1px_0_rgba(255,255,255,0),0_0_0_1px_rgba(87,90,100,0.12)] dark:shadow-[0_1px_1px_0_rgba(0,0,0,0),0_0_0_1px_rgba(168,170,180,0.2)] transition-all duration-200 ease-in-out rounded-lg px-4 mt-5 text-sm group hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_0_0_1px_rgba(87,90,100,0.18)] dark:hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.2),0_0_0_1px_rgba(168,170,180,0.3)]"
+            >
               <span className="relative z-10 flex items-center gap-1">
                 Learn how RunBook works
                 <ArrowRight className="w-4 h-4 -mr-1 transition-transform duration-150 group-hover:translate-x-1" />
