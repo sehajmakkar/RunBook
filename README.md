@@ -71,8 +71,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Features Incoming
 
-- [ ] User authentication
-- [ ] Goal setup interface
+- [X] User authentication
+- [X] Goal setup interface
 - [ ] Scheduled voice meetings
 - [ ] AI meeting logic and conversation flow
 - [ ] Persistent memory system
