@@ -143,11 +143,13 @@
 }
 
 /* Hide scrollbar utility for time picker */
-.hide-scrollbar {
+.hide-scrollbar,
+.scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
   display: none;
 }

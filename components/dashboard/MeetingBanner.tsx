@@ -25,13 +25,27 @@ function parseTimeString(
 ): { hours: number; minutes: number } | null {
   if (!timeStr) return null;
 
-  // Handle "HH:MM" format
+  // Handle "HH:MM AM/PM" format (e.g., "06:10 PM")
   if (timeStr.includes(":")) {
-    const parts = timeStr.split(":");
-    const hours = parseInt(parts[0], 10);
+    // Check for AM/PM
+    const upperTimeStr = timeStr.toUpperCase();
+    const isPM = upperTimeStr.includes("PM");
+    const isAM = upperTimeStr.includes("AM");
+
+    // Remove AM/PM and trim
+    const cleanTime = timeStr.replace(/\s*(AM|PM)\s*/i, "").trim();
+    const parts = cleanTime.split(":");
+    let hours = parseInt(parts[0], 10);
     const minutes = parseInt(parts[1], 10);
 
     if (!isNaN(hours) && !isNaN(minutes)) {
+      // Convert to 24-hour format if AM/PM is specified
+      if (isPM && hours !== 12) {
+        hours += 12; // 6 PM -> 18
+      } else if (isAM && hours === 12) {
+        hours = 0; // 12 AM -> 0
+      }
+
       return { hours, minutes };
     }
   }
