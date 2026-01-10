@@ -28,6 +28,8 @@ model User {
 
   goals           Goal[]
   meetingSchedule MeetingSchedule?
+  meetings        Meeting[]
+  memories        UserMemory[]
 
   @@map("users")
 }
@@ -51,17 +53,60 @@ model Goal {
 }
 
 model MeetingSchedule {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  time      String // e.g., "09:00" in 24-hour format
-  timezone  String   @default("UTC")
-  frequency String   @default("daily") // daily, weekly
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  time            String    // e.g., "09:00" in 24-hour format
+  timezone        String    @default("UTC")
+  frequency       String    @default("daily") // daily, weekly
+  isActive        Boolean   @default(true)
+  lastReminderAt  DateTime? // Track when last reminder was sent
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@map("meeting_schedules")
+}
+
+// ===========================================
+// Meeting & Memory Models (AI Manager Meeting)
+// ===========================================
+
+model Meeting {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status       MeetingStatus @default(IN_PROGRESS)
+  startedAt    DateTime      @default(now())
+  endedAt      DateTime?
+  durationMs   Int?          // Actual duration in milliseconds
+  transcript   Json?         // Array of {role: "user"|"ai", content: string, timestamp: number}
+  summary      String?       // AI-generated meeting summary
+  observations Json?         // {patterns: string[], risks: string[], improvements: string[]}
+  phase        MeetingPhase  @default(OPENING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("meetings")
+}
+
+model UserMemory {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   MemoryCategory
+  content    String         // The actual memory content
+  importance Int            @default(5) // 1-10 scale, higher = more important
+  sourceId   String?        // Reference to meeting ID that created this memory
+  metadata   Json?          // Additional context (e.g., related commitment IDs)
+  createdAt  DateTime       @default(now())
+  expiresAt  DateTime?      // Optional expiration for time-limited memories
+  updatedAt  DateTime       @updatedAt
+
+  @@index([userId, category])
+  @@index([userId, importance])
+  @@map("user_memories")
 }
 
 // ===========================================
@@ -85,4 +130,34 @@ enum CommitmentStatus {
   ACTIVE
   COMPLETED
   ABANDONED
+}
+
+// ===========================================
+// Meeting & Memory Enums
+// ===========================================
+
+enum MeetingStatus {
+  SCHEDULED    // Meeting is scheduled but not started
+  IN_PROGRESS  // Meeting is currently active
+  COMPLETED    // Meeting finished normally
+  MISSED       // User didn't join within grace period
+  CANCELLED    // Meeting was cancelled
+}
+
+enum MeetingPhase {
+  OPENING           // Greeting and context setting
+  PROGRESS_REVIEW   // Reviewing active commitments
+  BLOCKER_DISCUSSION // Probing incomplete items
+  CONFRONTATION     // Addressing patterns (optional)
+  COMMITMENT_LOCK_IN // Getting new commitments
+  CLOSING           // Wrapping up
+}
+
+enum MemoryCategory {
+  MISSED_COMMITMENT  // User missed a commitment
+  EXCUSE_PATTERN     // Repeated excuse detected
+  DELAY_PATTERN      // Consistently late on commitments
+  POSITIVE_TREND     // Improvement or streak
+  WORK_STYLE         // Preference or working pattern
+  BLOCKER            // Recurring blocker or obstacle
 }
