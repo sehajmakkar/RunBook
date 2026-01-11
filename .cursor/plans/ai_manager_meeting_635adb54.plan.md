@@ -17,7 +17,7 @@ todos:
       - meeting-ui
   - id: llm-provider
     content: Integrate Google Gemini 1.5 Flash for low-latency conversation
-    status: pending
+    status: completed
     dependencies:
       - voice-pipeline
   - id: meeting-phases
@@ -124,7 +124,7 @@ model Meeting {
   transcript    Json?    // Array of {role, content, timestamp}
   summary       String?
   observations  Json?    // {patterns: [], risks: [], improvements: []}
-  
+
   @@index([userId])
   @@map("meetings")
 }
@@ -139,7 +139,7 @@ model UserMemory {
   sourceId    String?  // Reference to meeting ID
   createdAt   DateTime @default(now())
   expiresAt   DateTime?
-  
+
   @@index([userId, category])
   @@map("user_memories")
 }
@@ -295,12 +295,12 @@ lib/ai/
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-const model = genAI.getGenerativeModel({ 
+const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
   generationConfig: {
-    maxOutputTokens: 150,  // Keep responses concise for voice
+    maxOutputTokens: 500, // Keep responses concise for voice
     temperature: 0.7,
-  }
+  },
 });
 ```
 
@@ -469,8 +469,8 @@ After meeting ends:
 interface MeetingOutput {
   summary: string;
   observations: {
-    patterns: string[];    // Behavioral patterns noticed
-    risks: string[];       // Potential issues flagged
+    patterns: string[]; // Behavioral patterns noticed
+    risks: string[]; // Potential issues flagged
     improvements: string[]; // Positive changes
   };
   commitments: {
@@ -624,12 +624,12 @@ MEETING_REMINDER_MINUTES=15
 ```typescript
 // Audio capture with optimal settings for voice
 const mediaRecorder = new MediaRecorder(stream, {
-  mimeType: 'audio/webm;codecs=opus',
-  audioBitsPerSecond: 16000,  // Voice doesn't need high bitrate
+  mimeType: "audio/webm;codecs=opus",
+  audioBitsPerSecond: 16000, // Voice doesn't need high bitrate
 });
 
 // Small chunks for lower latency
-mediaRecorder.start(100);  // 100ms chunks
+mediaRecorder.start(100); // 100ms chunks
 ```
 
 ### Server-Side

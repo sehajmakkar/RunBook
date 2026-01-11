@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/lib/supabase/server";
+import {
+  generateMeetingSummary,
+  type ConversationMessage,
+} from "@/lib/ai/meeting-agent";
 
 // POST /api/meeting/[id]/end - End a meeting and generate summary
 export async function POST(
@@ -17,6 +21,11 @@ export async function POST(
 
     const user = await prisma.user.findUnique({
       where: { supabaseId: supabaseUser.id },
+      include: {
+        goals: {
+          where: { status: "ACTIVE" },
+        },
+      },
     });
 
     if (!user) {
@@ -48,9 +57,47 @@ export async function POST(
     const endedAt = new Date();
     const durationMs = endedAt.getTime() - meeting.startedAt.getTime();
 
-    // TODO: Generate AI summary in the meeting-output phase
-    // For now, create a placeholder summary
-    const summary = generatePlaceholderSummary(transcript, user.name);
+    // Convert transcript to ConversationMessage format
+    const conversationHistory: ConversationMessage[] = (transcript || []).map(
+      (entry: { role: string; content: string; timestamp?: number }) => ({
+        role: entry.role as "user" | "ai",
+        content: entry.content,
+        timestamp: entry.timestamp || Date.now(),
+      })
+    );
+
+    // Generate AI summary
+    let summary: string;
+    let observations: {
+      patterns: string[];
+      risks: string[];
+      improvements: string[];
+    };
+
+    try {
+      const summaryResult = await generateMeetingSummary({
+        userName: user.name || user.email.split("@")[0],
+        commitments: user.goals.map((g) => ({
+          id: g.id,
+          title: g.title,
+          type: g.type as "DAILY" | "WEEKLY" | "MONTHLY",
+          priority: g.priority as "DEFAULT" | "LOW" | "HIGH" | "URGENT",
+          status: g.status as "ACTIVE" | "COMPLETED" | "ABANDONED",
+          completedAt: g.completedAt,
+        })),
+        conversationHistory,
+        currentPhase: "CLOSING",
+        meetingStartTime: meeting.startedAt.getTime(),
+      });
+
+      summary = summaryResult.summary;
+      observations = summaryResult.observations;
+    } catch (err) {
+      console.error("Error generating AI summary:", err);
+      // Fallback to placeholder
+      summary = generatePlaceholderSummary(transcript, user.name);
+      observations = { patterns: [], risks: [], improvements: [] };
+    }
 
     // Update meeting with completion data
     const completedMeeting = await prisma.meeting.update({
@@ -62,11 +109,7 @@ export async function POST(
         durationMs,
         transcript: transcript || meeting.transcript,
         summary,
-        observations: {
-          patterns: [],
-          risks: [],
-          improvements: [],
-        },
+        observations,
       },
     });
 
@@ -80,7 +123,7 @@ export async function POST(
   }
 }
 
-// Placeholder summary generator (will be replaced with AI in meeting-output phase)
+// Placeholder summary generator (fallback if AI fails)
 function generatePlaceholderSummary(
   transcript: Array<{ role: string; content: string }> | null,
   userName: string | null
