@@ -29,7 +29,7 @@ export class DeepgramTTS {
     if (!this.audioContext) {
       this.audioContext = new AudioContext();
     }
-    
+
     // Resume if suspended (browser autoplay policy)
     if (this.audioContext.state === "suspended") {
       await this.audioContext.resume();
@@ -59,7 +59,7 @@ export class DeepgramTTS {
 
     try {
       await this.init();
-      
+
       this.isPlaying = true;
       options.onStart?.();
 
@@ -77,7 +77,11 @@ export class DeepgramTTS {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(`TTS request failed: ${response.status} ${errorData.error || response.statusText}`);
+        throw new Error(
+          `TTS request failed: ${response.status} ${
+            errorData.error || response.statusText
+          }`
+        );
       }
 
       // Get audio data as ArrayBuffer
@@ -92,24 +96,31 @@ export class DeepgramTTS {
       const audioBuffer = await this.audioContext.decodeAudioData(audioData);
       console.log("[TTS] Decoded audio:", audioBuffer.duration, "seconds");
 
-      // Create and play source
-      this.currentSource = this.audioContext.createBufferSource();
-      this.currentSource.buffer = audioBuffer;
-      this.currentSource.connect(this.audioContext.destination);
+      // Create and play source, wait for completion
+      return new Promise<void>((resolve, reject) => {
+        try {
+          this.currentSource = this.audioContext!.createBufferSource();
+          this.currentSource.buffer = audioBuffer;
+          this.currentSource.connect(this.audioContext!.destination);
 
-      this.currentSource.onended = () => {
-        console.log("[TTS] Playback ended");
-        this.isPlaying = false;
-        this.currentSource = null;
-        options.onEnd?.();
+          this.currentSource.onended = () => {
+            console.log("[TTS] Playback ended");
+            this.isPlaying = false;
+            this.currentSource = null;
+            options.onEnd?.();
 
-        // Process queue
-        this.processQueue();
-      };
+            // Process queue
+            this.processQueue();
+            resolve();
+          };
 
-      console.log("[TTS] Starting playback...");
-      this.currentSource.start();
-
+          console.log("[TTS] Starting playback...");
+          this.currentSource.start();
+        } catch (playbackError) {
+          this.isPlaying = false;
+          reject(playbackError);
+        }
+      });
     } catch (error) {
       this.isPlaying = false;
       const err = error instanceof Error ? error : new Error(String(error));
@@ -118,6 +129,7 @@ export class DeepgramTTS {
 
       // Process queue even on error
       this.processQueue();
+      throw err;
     }
   }
 
@@ -185,7 +197,10 @@ export class DeepgramTTS {
 /**
  * Speak text immediately (convenience function)
  */
-export async function speakText(text: string, options?: TTSOptions): Promise<void> {
+export async function speakText(
+  text: string,
+  options?: TTSOptions
+): Promise<void> {
   const tts = new DeepgramTTS(options);
   await tts.speak(text, options);
 }

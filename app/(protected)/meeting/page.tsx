@@ -13,7 +13,11 @@ import {
   type MeetingData,
   type CommitmentPreview,
 } from "@/components/meeting";
-import { useVoicePipeline, type VoicePipelineState } from "@/lib/voice";
+import {
+  useVoicePipeline,
+  type VoicePipelineState,
+  VoicePipeline,
+} from "@/lib/voice";
 
 interface User {
   id: string;
@@ -47,6 +51,8 @@ export default function MeetingPage() {
   const isProcessingRef = useRef(false);
   const pendingUserMessageRef = useRef<string | null>(null);
   const shouldEndMeetingRef = useRef(false);
+  // Store the actual VoicePipeline instance for direct TTS access (avoids closure issues)
+  const pipelineInstanceRef = useRef<VoicePipeline | null>(null);
   const voicePipelineRef = useRef<ReturnType<typeof useVoicePipeline> | null>(
     null
   );
@@ -93,15 +99,21 @@ export default function MeetingPage() {
         };
         setTranscript((prev) => [...prev, aiEntry]);
 
-        // Speak the response if voice is active
-        const pipeline = voicePipelineRef.current;
-        if (isVoicePipelineActive.current && pipeline?.isReady) {
+        // Speak the response if voice is active - use the stored pipeline instance directly
+        const pipelineInstance = pipelineInstanceRef.current;
+        if (isVoicePipelineActive.current && pipelineInstance) {
           setMeetingState("AI_SPEAKING");
+          console.log("[Meeting] Speaking AI response...");
           try {
-            await pipeline.speak(data.response);
+            await pipelineInstance.speak(data.response);
+            console.log("[Meeting] AI response spoken");
           } catch (speakErr) {
             console.warn("[Meeting] Failed to speak AI response:", speakErr);
           }
+        } else {
+          console.log(
+            "[Meeting] Voice not active or pipeline not available, skipping TTS"
+          );
         }
 
         // Check if meeting should end - set ref for effect to handle
@@ -273,17 +285,25 @@ export default function MeetingPage() {
       setMeetingData(meeting);
       setStartTime(Date.now());
 
-      // Try to start voice pipeline
+      // Try to start voice pipeline - capture the returned instance
       let voiceEnabled = false;
+      let pipelineInstance: Awaited<ReturnType<typeof voicePipeline.start>> =
+        null;
       try {
-        await voicePipeline.start();
-        voiceEnabled = true;
-        isVoicePipelineActive.current = true;
-        console.log("[Meeting] Voice pipeline started successfully");
+        pipelineInstance = await voicePipeline.start();
+        voiceEnabled = !!pipelineInstance;
+        isVoicePipelineActive.current = voiceEnabled;
+        // Store the pipeline instance in a ref for later use (speaking AI responses)
+        pipelineInstanceRef.current = pipelineInstance;
+        console.log(
+          "[Meeting] Voice pipeline started successfully, instance:",
+          !!pipelineInstance
+        );
       } catch (voiceErr) {
         console.warn("[Meeting] Voice pipeline failed to start:", voiceErr);
         // Continue without voice - will show transcript only
         isVoicePipelineActive.current = false;
+        pipelineInstanceRef.current = null;
       }
 
       setMeetingState("IN_PROGRESS");
@@ -338,12 +358,14 @@ export default function MeetingPage() {
       };
       setTranscript([greetingEntry]);
 
-      // Speak the greeting if voice pipeline started successfully
-      if (voiceEnabled) {
-        console.log("[Meeting] Speaking greeting...");
+      // Speak the greeting using the pipeline instance directly (avoids stale closure)
+      if (voiceEnabled && pipelineInstance) {
+        console.log(
+          "[Meeting] Speaking greeting using direct pipeline instance..."
+        );
         setMeetingState("AI_SPEAKING");
         try {
-          await voicePipeline.speak(greeting);
+          await pipelineInstance.speak(greeting);
           console.log("[Meeting] Greeting spoken");
           setMeetingState("IN_PROGRESS");
         } catch (speakErr) {
@@ -385,6 +407,7 @@ export default function MeetingPage() {
     setMeetingState("ENDING");
     isVoicePipelineActive.current = false;
     shouldEndMeetingRef.current = false;
+    pipelineInstanceRef.current = null;
 
     // Stop voice pipeline
     voicePipeline.stop();

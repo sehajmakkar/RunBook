@@ -3,7 +3,7 @@
 import { DeepgramSTT, type STTCallbacks } from "./stt";
 import { DeepgramTTS, type TTSOptions } from "./tts";
 
-export type VoicePipelineState = 
+export type VoicePipelineState =
   | "idle"
   | "connecting"
   | "listening"
@@ -38,7 +38,10 @@ export class VoicePipeline {
   private isInitialized = false;
   private interimTranscript = "";
 
-  constructor(callbacks: VoicePipelineCallbacks, options: VoicePipelineOptions = {}) {
+  constructor(
+    callbacks: VoicePipelineCallbacks,
+    options: VoicePipelineOptions = {}
+  ) {
     this.callbacks = callbacks;
     this.options = {
       voice: options.voice ?? "aura-asteria-en",
@@ -51,13 +54,21 @@ export class VoicePipeline {
       voice: this.options.voice,
       onStart: () => {
         this.setState("speaking");
+        // Mute STT while TTS is playing to prevent audio feedback from triggering voice activity
+        this.stt?.setMuted(true);
         this.callbacks.onSpeechStart?.();
       },
       onEnd: () => {
+        // Unmute STT after TTS finishes - add small delay to prevent picking up tail end of audio
+        setTimeout(() => {
+          this.stt?.setMuted(false);
+        }, 300);
         this.setState("listening");
         this.callbacks.onSpeechEnd?.();
       },
       onError: (error) => {
+        // Unmute STT on error too
+        this.stt?.setMuted(false);
         this.callbacks.onError(error);
       },
     });
@@ -126,7 +137,6 @@ export class VoicePipeline {
 
       await this.stt.start();
       this.isInitialized = true;
-
     } catch (error) {
       this.setState("error");
       throw error;
@@ -194,9 +204,9 @@ export class VoicePipeline {
   stop(): void {
     this.stt?.stop();
     this.stt = null;
-    
+
     this.tts.dispose();
-    
+
     this.isInitialized = false;
     this.interimTranscript = "";
     this.setState("idle");

@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { VoicePipeline, type VoicePipelineState, type VoicePipelineOptions } from "./pipeline";
+import {
+  VoicePipeline,
+  type VoicePipelineState,
+  type VoicePipelineOptions,
+} from "./pipeline";
 
 export interface UseVoicePipelineOptions extends VoicePipelineOptions {
   onTranscript?: (text: string, isFinal: boolean) => void;
@@ -18,11 +22,12 @@ export interface UseVoicePipelineReturn {
   isListening: boolean;
   voiceLevel: number;
   error: Error | null;
-  start: () => Promise<void>;
+  start: () => Promise<VoicePipeline | null>;
   stop: () => void;
   speak: (text: string) => Promise<void>;
   stopSpeaking: () => void;
   setMuted: (muted: boolean) => void;
+  getPipeline: () => VoicePipeline | null;
 }
 
 /**
@@ -35,7 +40,7 @@ export function useVoicePipeline(
   const [isReady, setIsReady] = useState(false);
   const [voiceLevel, setVoiceLevel] = useState(0);
   const [error, setError] = useState<Error | null>(null);
-  
+
   const pipelineRef = useRef<VoicePipeline | null>(null);
   const optionsRef = useRef(options);
 
@@ -45,12 +50,12 @@ export function useVoicePipeline(
   }, [options]);
 
   // Start the voice pipeline
-  const start = useCallback(async () => {
+  const start = useCallback(async (): Promise<VoicePipeline | null> => {
     console.log("[useVoicePipeline] start() called");
-    
+
     if (pipelineRef.current) {
       console.warn("[useVoicePipeline] Pipeline already started");
-      return;
+      return pipelineRef.current;
     }
 
     setError(null);
@@ -84,12 +89,15 @@ export function useVoicePipeline(
     );
 
     pipelineRef.current = pipeline;
-    console.log("[useVoicePipeline] Pipeline instance created");
+    console.log(
+      "[useVoicePipeline] Pipeline instance created and stored in ref"
+    );
 
     try {
       await pipeline.start();
       console.log("[useVoicePipeline] Pipeline started successfully");
       setIsReady(true);
+      return pipeline;
     } catch (err) {
       console.error("[useVoicePipeline] Pipeline start failed:", err);
       pipelineRef.current = null;
@@ -111,19 +119,37 @@ export function useVoicePipeline(
     setVoiceLevel(0);
   }, []);
 
-  // Speak text - returns immediately if pipeline not ready
+  // Get the current pipeline instance (useful for direct access)
+  const getPipeline = useCallback((): VoicePipeline | null => {
+    return pipelineRef.current;
+  }, []);
+
+  // Speak text - uses a function getter pattern to avoid stale closures
   const speak = useCallback(async (text: string) => {
-    console.log("[useVoicePipeline] speak() called with:", text.substring(0, 50) + "...");
-    console.log("[useVoicePipeline] pipelineRef.current:", !!pipelineRef.current);
-    
-    if (!pipelineRef.current) {
-      console.warn("[useVoicePipeline] Pipeline not started, cannot speak");
+    console.log(
+      "[useVoicePipeline] speak() called with:",
+      text.substring(0, 50) + "..."
+    );
+
+    // Access ref directly at call time to avoid stale closure
+    const pipeline = pipelineRef.current;
+    console.log("[useVoicePipeline] pipelineRef.current exists:", !!pipeline);
+
+    if (!pipeline) {
+      console.warn(
+        "[useVoicePipeline] Pipeline not started, cannot speak. Use the pipeline returned from start() or getPipeline() for immediate use after starting."
+      );
       return;
     }
-    
+
     console.log("[useVoicePipeline] Calling pipeline.speak()");
-    await pipelineRef.current.speak(text);
-    console.log("[useVoicePipeline] pipeline.speak() completed");
+    try {
+      await pipeline.speak(text);
+      console.log("[useVoicePipeline] pipeline.speak() completed");
+    } catch (err) {
+      console.error("[useVoicePipeline] pipeline.speak() failed:", err);
+      throw err;
+    }
   }, []);
 
   // Stop speaking
@@ -149,7 +175,8 @@ export function useVoicePipeline(
   return {
     state,
     isReady,
-    isConnected: state !== "idle" && state !== "error" && state !== "connecting",
+    isConnected:
+      state !== "idle" && state !== "error" && state !== "connecting",
     isSpeaking: state === "speaking",
     isListening: state === "listening",
     voiceLevel,
@@ -159,5 +186,6 @@ export function useVoicePipeline(
     speak,
     stopSpeaking,
     setMuted,
+    getPipeline,
   };
 }
